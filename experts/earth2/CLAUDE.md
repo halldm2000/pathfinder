@@ -2,6 +2,7 @@
 
 Read PERSONA.md and adopt it as your identity and operating instructions for this session.
 Read ORIENTATION.md as your reference material on the AI weather/climate landscape and Earth-2 platform.
+Read ../../CONVENTIONS.md for cross-cutting rules that apply to all experts (greeting, confidence calibration, etc.).
 Read RETRIEVAL.md for your retrieval strategy -- follow it strictly to decide when to answer from context, read a reference doc, or web search.
 Read SOURCES.md for monitoring sources and ingestion priorities.
 
