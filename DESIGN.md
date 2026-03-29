@@ -14,10 +14,11 @@ Pathfinder (meta-expert, MCP server)
 ├── Expert definitions (~/.pathfinder/experts/)
 │   ├── {domain-name}/
 │   │   ├── PERSONA.md          <- system instructions
-│   │   ├── ORIENTATION.md      <- briefing book (2-5k tokens)
+│   │   ├── ORIENTATION.md      <- briefing book (2-5k tokens, always loaded)
+│   │   ├── reference/          <- deep-dive docs (500-2k tokens each, read on demand)
 │   │   ├── SOURCES.md          <- ingestion + monitoring sources
-│   │   ├── RETRIEVAL.md        <- retrieval strategy config
-│   │   ├── knowledge.db        <- SQLite + vector embeddings
+│   │   ├── RETRIEVAL.md        <- retrieval strategy (three-tier hierarchy)
+│   │   ├── knowledge.db        <- SQLite + vector embeddings (optional, for large corpora)
 │   │   └── sources/            <- cached raw content
 │   └── pathfinder/             <- Pathfinder is its own first expert
 │       ├── PERSONA.md
@@ -32,16 +33,20 @@ Pathfinder (meta-expert, MCP server)
 
 ## Implementation Phases
 
-### v0: Two Files (no code)
+### v0: Two Files + Reference (no code)
 
-The minimum viable expert is PERSONA.md + ORIENTATION.md. These can be:
-- Pasted into any Claude conversation's system prompt
+The minimum viable expert is PERSONA.md + ORIENTATION.md + reference/ directory. These can be:
+- Used as a Claude Code project (the primary deployment model)
+- Loaded into a Claude Cowork session
+- Pasted into any Claude conversation's system prompt (orientation doc only; reference docs loaded as needed)
 - Added to a Claude Desktop project as project knowledge
 - Used as MCP prompt + resource definitions
 
-Pathfinder's own PERSONA.md and ORIENTATION.md are the v0 deliverables. A user can paste them into Claude and say "build me an expert on X," and Pathfinder walks them through domain scoping, persona drafting, orientation writing, and retrieval planning.
+The orientation doc is the always-loaded cheat sheet (top 50–100 facts). The reference/ directory contains deep-dive docs on key entities (10–30 files, 500–2,000 tokens each) that the expert reads on demand. Together they give the expert both breadth (orientation) and depth (reference) without web search latency.
 
-**What v0 proves:** That context engineering (persona + orientation) produces measurably better domain expertise than a generic Claude conversation. Test by asking domain-specific questions with and without the context layer.
+Pathfinder's own PERSONA.md and ORIENTATION.md are the v0 deliverables. A user can paste them into Claude and say "build me an expert on X," and Pathfinder walks them through domain scoping, persona drafting, orientation writing, reference doc creation, and retrieval planning.
+
+**What v0 proves:** That context engineering (persona + orientation + local reference depth) produces measurably better domain expertise than a generic Claude conversation — and that the expert can answer detailed questions in seconds rather than minutes. Test by asking domain-specific questions with and without the context layer, measuring both quality and response time.
 
 ### v1: MCP Server (TypeScript)
 
@@ -82,9 +87,10 @@ When the user says "create me an expert on X," Pathfinder runs a guided conversa
 3. Identify the expert archetype (see ORIENTATION.md for definitions)
 4. Draft a persona based on archetype + user responses
 5. Draft an orientation document, asking the user to verify key facts and fill gaps
-6. Suggest sources for ingestion and monitoring
-7. Run the six-probe evaluation (see ORIENTATION.md) and iterate
-8. Save all artifacts to `~/.pathfinder/experts/{name}/`
+6. Build reference docs for the top entities (detailed deep-dives, read on demand)
+7. Design retrieval strategy (three-tier hierarchy) and suggest sources for monitoring
+8. Run the six-probe evaluation (see ORIENTATION.md) and iterate
+9. Save all artifacts to `~/.pathfinder/experts/{name}/`
 
 This is collaborative. The user's domain knowledge combined with Pathfinder's expert-design knowledge produces better results than either alone.
 
@@ -119,11 +125,13 @@ Add autonomous capabilities to the builder and serving layers.
 
 ### The persona is the product, not the knowledge base
 
-Most RAG systems treat the vector index as the core value. Pathfinder treats the persona + orientation document as the core value. The retrieval index supplements them. Reasons:
+Most RAG systems treat the vector index as the core value. Pathfinder treats the persona + orientation document + reference docs as the core value. The retrieval index supplements them. Reasons:
 
 1. A good persona improves every response, even when retrieval returns nothing
 2. The orientation document is always in context — critical facts are always available, not subject to retrieval ranking
-3. A persona encodes judgment (how to reason, when to flag uncertainty, what mistakes to avoid), which no retrieval system can provide
+3. Reference docs give the expert instant depth on key entities — the answers that would otherwise require slow web searches
+4. A persona encodes judgment (how to reason, when to flag uncertainty, what mistakes to avoid), which no retrieval system can provide
+5. Together, persona + orientation + reference docs cover 80%+ of questions without any external calls — this is what makes an expert feel like a knowledgeable colleague rather than a slow librarian
 
 ### Collaborative creation over autonomous creation (v1)
 
@@ -134,14 +142,15 @@ v1's create-expert is a guided conversation, not autonomous research. Reasons:
 3. A collaborative process produces artifacts the user trusts (they helped write them)
 4. Autonomous research is a harder technical problem that can wait for v2
 
-### Each expert is four files
+### Each expert is files + reference docs
 
-An expert is fully defined by PERSONA.md, ORIENTATION.md, SOURCES.md, and RETRIEVAL.md. The knowledge.db (vector index) is derived from these. This means:
+An expert is fully defined by PERSONA.md, ORIENTATION.md, reference/ directory, SOURCES.md, and RETRIEVAL.md. The knowledge.db (vector index) is optional and derived from these. This means:
 
 1. Experts are human-readable and human-editable
 2. Experts can be version-controlled (git)
 3. Experts can be shared without sharing the full retrieval index
 4. The retrieval index can be rebuilt from SOURCES.md at any time
+5. Reference docs give the expert instant depth without infrastructure — just file reads
 
 ### MCP uses all three primitives
 
@@ -163,10 +172,12 @@ Expert archetypes are design accelerators, not rigid categories. Identifying the
   experts/
     {name}/
       PERSONA.md                  <- system instructions
-      ORIENTATION.md              <- briefing book
+      ORIENTATION.md              <- briefing book (always loaded)
+      reference/                  <- deep-dive entity docs (read on demand)
+        {entity}.md               <- one file per key entity (500-2k tokens)
       SOURCES.md                  <- ingestion + monitoring sources
-      RETRIEVAL.md                <- retrieval strategy
-      knowledge.db                <- SQLite with embeddings (derived, rebuildable)
+      RETRIEVAL.md                <- retrieval strategy (three-tier hierarchy)
+      knowledge.db                <- SQLite with embeddings (optional, for large corpora)
       sources/                    <- cached raw content
         {hash}.md                 <- parsed + cleaned source content
         {hash}.meta.json          <- source metadata (URL, title, date, type)

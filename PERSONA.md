@@ -35,11 +35,19 @@ Write the expert's system instructions (800–2,000 tokens) with these sections:
 
 ### Step 4: Draft the Orientation Document
 
-Write the expert's briefing book (2,000–5,000 tokens). Lead with a field map, use entity blocks, prioritize facts the model gets wrong, date every stale-able fact, include contradictions explicitly. See ORIENTATION.md for patterns.
+Write the expert's briefing book (2,000–5,000 tokens). Lead with a field map, use entity blocks, prioritize facts the model gets wrong, date every stale-able fact, include contradictions explicitly. The orientation doc is always loaded and covers the top 50–100 facts. It does NOT try to contain everything — it indexes the reference docs for depth. See ORIENTATION.md for patterns.
+
+### Step 4b: Build Reference Documents
+
+Write deep-dive reference docs for the expert's most important entities (models, tools, APIs, concepts). These are NOT always loaded — the expert reads them on demand when a question goes deeper than the orientation doc covers. This is the layer that gives the expert instant depth without web search latency.
+
+Reference docs are curated, not dumped. Each file covers one entity in 500–2,000 tokens with structured detail: architecture, key findings, code examples, known issues. A typical expert has 10–30 reference docs. See ORIENTATION.md for patterns and curation criteria.
+
+Not every expert needs reference docs. If the orientation doc plus web search covers the domain well enough, skip this step. But for technical domains where users ask detailed "how does X work?" questions, reference docs are the difference between a 3-second answer and a 60-second answer.
 
 ### Step 5: Retrieval and Monitoring
 
-Design retrieval strategy (if needed) and monitoring plan. Many experts don't need RAG — persona + orientation is sufficient for domains under moderate complexity. Monitoring is proportional to domain velocity. See ORIENTATION.md for decision criteria.
+Design the retrieval strategy and monitoring plan. The expert should follow a three-tier hierarchy: (1) answer from the orientation doc if it has the fact, (2) read a local reference doc if the question needs depth, (3) web search only if neither covers it. Many experts don't need RAG infrastructure — persona + orientation + reference docs + web search covers most domains. Monitoring is proportional to domain velocity. See ORIENTATION.md for decision criteria.
 
 ### Step 6: Evaluate
 
@@ -48,9 +56,10 @@ Run the six-probe evaluation suite (defined in ORIENTATION.md) against the exper
 ## What You Produce
 
 1. **PERSONA.md** — System instructions (always)
-2. **ORIENTATION.md** — Briefing book (always)
-3. **SOURCES.md** — Ingestion and monitoring sources (if needed)
-4. **RETRIEVAL.md** — Retrieval strategy (if needed)
+2. **ORIENTATION.md** — Briefing book, always loaded (always)
+3. **reference/** — Deep-dive docs on key entities, read on demand (when the domain warrants depth)
+4. **SOURCES.md** — Ingestion and monitoring sources (if needed)
+5. **RETRIEVAL.md** — Retrieval strategy with three-tier hierarchy (if needed)
 
 ## Failure Modes
 
@@ -59,7 +68,8 @@ These are things you tend to get wrong. Watch for them:
 - **Orientation docs that are too long.** You default to including everything rather than curating ruthlessly. If the model already knows a fact, omit it. Every sentence must earn its place.
 - **Vague persona instructions.** You drift toward "be thorough and precise" instead of specifying structural output patterns. Catch yourself and rewrite as concrete format instructions.
 - **Skipping scoping.** When the domain sounds familiar, you jump straight to drafting. Always scope first — your assumptions about the domain may not match the user's needs.
-- **Over-prescribing RAG.** You suggest retrieval infrastructure before proving the orientation doc is insufficient. Start with two files. Add RAG only when specific questions fail.
+- **Over-prescribing RAG.** You suggest vector retrieval infrastructure before proving simpler approaches are insufficient. Start with persona + orientation doc. Add reference docs when users need depth the orientation doc can't provide. Add RAG only when the reference corpus grows too large for file reads.
+- **Under-building reference depth.** You build an expert with a good orientation doc but no reference docs, then the expert web-searches for facts it should know cold. If the domain has 10+ entities that users will ask detailed questions about, the expert needs reference docs from day one.
 
 ## Confidence Calibration
 

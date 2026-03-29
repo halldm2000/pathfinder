@@ -10,9 +10,11 @@ Last updated: March 2026. Claude's training data extends through early 2025 — 
 
 **Orientation document: 2,000–5,000 tokens.** Loaded into every conversation. Under 2,000 and you are probably not correcting enough stale facts. Over 5,000 and you are including things the model already knows — wasting context and degrading performance by diluting corrections with redundancy.
 
-**RAG chunks per query: 3–5 chunks, 300–500 tokens each.** More than 5 floods context with marginally relevant content. Total retrieval budget per query: 1,500–2,500 tokens.
+**Reference docs: 500–2,000 tokens each, 10–30 docs per expert.** Not always loaded — read on demand. Typically 1–2 reference docs loaded per query, so effective retrieval budget per query is 1,000–4,000 tokens. These replace most web searches for detailed questions.
 
-**Total expert context per conversation: under 8,000 tokens.** Persona + orientation + retrieval. This leaves the majority of the context window for the actual conversation.
+**RAG chunks per query: 3–5 chunks, 300–500 tokens each.** Only needed when reference corpus exceeds ~50 documents. Total RAG retrieval budget per query: 1,500–2,500 tokens.
+
+**Total expert context per conversation: under 10,000 tokens.** Persona + orientation + 1–2 reference docs loaded on demand. This leaves the majority of the context window for the actual conversation. Reference docs are loaded and released per question, not held permanently.
 
 ## Expert Archetypes
 
@@ -88,15 +90,78 @@ with explicit caveats. You are not an expert in [Z] — redirect these.
 
 **Persona draft** should always contain these sections, in order: (1) Identity and scope (with scope triplet), (2) Reasoning style (structural, not aspirational), (3) Failure modes (with corrections), (4) Confidence calibration (three tiers), (5) Response structure (for common task types).
 
-**Orientation doc draft** should always contain: (1) Field map (3–5 sentences), (2) Entity blocks for key domain concepts, (3) Dated facts for anything stale-able, (4) Explicit contradictions where sources disagree.
+**Orientation doc draft** should always contain: (1) Field map (3–5 sentences), (2) Entity blocks for key domain concepts (summaries, not exhaustive — reference docs have depth), (3) Dated facts for anything stale-able, (4) Explicit contradictions where sources disagree.
+
+**Reference docs** should contain: (1) One file per major entity, (2) Structured format (what it is, key details, how to use it, relationships, known issues, sources), (3) 500–2,000 tokens each, (4) Prioritized by expected question frequency.
 
 **Scoping summary** should capture: domain, audience, tasks, boundaries, archetype (primary + secondary), domain velocity, failure cost, existing resources.
 
 **Evaluation scorecard** should report: probe name, pass/fail, evidence (what the expert said), recommendation (what to fix).
 
-## Retrieval (RAG) — When and How
+## Three-Tier Retrieval Hierarchy
 
-**RAG is for specifics, not for knowledge.** If retrieval fires on most queries, the orientation doc is underbuilt. RAG should handle: exact quotes, API signatures, detailed specifications, code examples, cited passages.
+Every expert should follow this hierarchy, in order:
+
+**Tier 1: Orientation doc (always loaded, instant).** The expert's cheat sheet. Covers the top 50–100 facts: field map, entity summaries, key relationships, dated facts, common misconceptions. If the orientation doc has the answer, use it. Do not search.
+
+**Tier 2: Reference docs (read on demand, milliseconds).** Deep-dive files on the expert's most important entities. The expert reads the relevant file when a question goes deeper than the orientation doc covers. This is what gives an expert instant depth — the difference between a 3-second answer and a 60-second web search. If the domain has 10+ entities that users will ask detailed questions about, reference docs are mandatory, not optional.
+
+**Tier 3: Web search (last resort, seconds).** For facts that change weekly (version numbers, benchmark leaderboards, new releases), events from the last 2–4 weeks, and topics not in the reference corpus. If the expert is doing web searches for more than ~20% of questions, the reference docs are underbuilt.
+
+**Tier 4 (optional): RAG / vector search.** For expert corpora that grow beyond what file reads can handle (100+ documents, thousands of chunks). Most experts never need this tier.
+
+The retrieval strategy document (RETRIEVAL.md) should specify which tier handles which question types for the specific domain, and include patterns for how to search at each tier.
+
+## Reference Document Patterns
+
+**One file per entity.** Each reference doc covers one model, tool, concept, or API. File name matches the entity: `reference/atlas.md`, `reference/corrdiff.md`, `reference/era5.md`.
+
+**Target: 500–2,000 tokens per file.** Enough to answer a detailed "how does X work?" question without web search. Not so long it floods context when loaded.
+
+**Typical expert: 10–30 reference docs.** Prioritize by question frequency. The entities that users ask about most get reference docs first.
+
+**Structured format:**
+
+```
+### [Entity Name]
+
+**What it is:** [One paragraph — architecture, purpose, key innovation]
+
+**Key details:**
+- [Specific numbers, dates, versions that matter]
+- [Training data, resolution, performance characteristics]
+
+**How to use it:** [Code example or workflow, if applicable]
+
+**Relationship to other entities:** [How it connects to the rest of the ecosystem]
+
+**Known issues / limitations:** [What to watch out for]
+
+**Sources:** [Paper URLs, docs, repos]
+
+As of: [date of last verification]
+```
+
+**Curation criteria — what goes where:**
+
+| Question type | Tier | Example |
+|---|---|---|
+| "What is X?" (brief) | Orientation doc | "Atlas is a global probabilistic model using DiT in latent space" |
+| "How does X work?" (detailed) | Reference doc | Full architecture breakdown, training details, inference patterns |
+| "What's the latest version of X?" | Web search | Version numbers change between releases |
+| "Show me code to do X" | Reference doc | Working code examples with imports and data loading |
+| "How does X compare to Y?" | Orientation doc (structure) + reference docs (detail) | Orientation doc has the comparison framework; reference docs have the specifics |
+| "Has anyone published on X this month?" | Web search | Recent publications require live search |
+
+**The orientation doc indexes the reference docs.** Entity blocks in the orientation doc should be summaries, not exhaustive. The reference doc has the depth. The orientation doc's job is to give the expert enough context to know which reference doc to read.
+
+**Reference docs are curated, not dumped.** The same curation discipline that applies to the orientation doc applies here. Every sentence earns its place. A 1,000-token reference doc with the right 20 facts beats a 5,000-token doc with everything from the paper. The expert can always web search for edge cases — reference docs cover the questions that come up repeatedly.
+
+## RAG / Vector Retrieval — When and How
+
+**RAG is for scale, not for depth.** If the expert has fewer than ~50 reference documents, file reads are faster and more reliable than vector search. RAG becomes worthwhile when the corpus grows beyond what structured file reads can handle — hundreds of papers, thousands of API pages, large codebases.
+
+**RAG is for specifics, not for knowledge.** If retrieval fires on most queries, the orientation doc and reference docs are underbuilt. RAG should handle: exact quotes, API signatures across many versions, detailed specifications from large doc sets, cited passages from papers.
 
 **Embedding models (as of March 2026):**
 - Local: `nomic-embed-text` via Ollama (~270MB, 768 dims, strong on technical content)
@@ -124,6 +189,8 @@ with explicit caveats. You are not an expert in [Z] — redirect these.
 4. **Missing scope boundaries.** Without explicit out-of-scope limits, the model will hallucinate in adjacent domains.
 5. **No staleness plan.** Confident but outdated answers are worse than no expert. If domain velocity is faster than quarterly, you need monitoring.
 6. **Over-engineering v0.** Building RAG before persona and orientation are proven. Start with two files.
+7. **Web search as knowledge.** Expert web-searches for facts it should know cold. If users regularly wait 30–60 seconds for answers about core entities, the expert needs reference docs. Web search is for freshness, not for depth.
+8. **Orientation-only expert.** Orientation doc covers the top 50 facts but users ask detailed questions about the top 10 entities. Without reference docs, every "how does X work?" question triggers a web search. An expert that knows about everything but knows nothing deeply is a librarian, not a colleague.
 
 ## Evaluation: The Six Probes
 
