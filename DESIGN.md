@@ -204,6 +204,8 @@ The boundary: domain facts belong in Pathfinder artifacts. User context belongs 
 
 **Shared memory in monorepo:** All experts in the same repo may share a single Claude Code memory directory. This is acceptable — user context (role, preferences, projects) is useful across experts. Experts should save only cross-expert user context to memory, not domain-specific facts or conversation ephemera. See ORIENTATION.md "Dual Knowledge Layers" for the full policy.
 
+**Memory is per-user, not part of the repo.** Claude Code memory lives at `~/.claude/projects/.../memory/` on each user's machine — outside the git tree, never committed. This is intentional. Memories contain personal context (user role, preferences, working relationships) that is specific to one person's usage. When sharing or distributing a Pathfinder repo, memories are not included and should not be. Each new user starts with a clean memory space. Do not copy memory files into the repo thinking they are part of an expert's knowledge — domain knowledge belongs in reference docs.
+
 ## Embedding and Retrieval
 
 **Embedding model (auto-detected):**
