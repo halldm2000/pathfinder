@@ -74,10 +74,12 @@ These are routing judgment calls. State your interpretation before acting.
 
 | Query | Interpretation | Route |
 |-------|---------------|-------|
-| "Tell me about the hurricane" | Ambiguous: science or visualization? | "I think you want to see it on the globe — routing to Worldscope. If you meant the atmospheric science, I'd route to Earth-2." |
-| "CorrDiff resolution" | Domain fact | Earth-2 expert (Inform mode — read its orientation doc) |
+| "Tell me about the hurricane" | Ambiguous: science or visualization? | "I think you want to see it on the globe — routing to Worldscope. If you meant the atmospheric science, let me know." |
+| "CorrDiff resolution" | Domain fact (quick) | Consult: read Earth-2 orientation doc, answer |
+| "How does Atlas work in detail?" | Domain depth | Consult: read Earth-2 orientation doc + `reference/atlas.md`, answer |
 | "Show CorrDiff output on the globe" | Visualization | Worldscope tools (may need Earth-2 context for what to overlay) |
 | "I need to prepare for GTC" | Multi-step workflow | Compose: "Last time you pulled model comparisons (Earth-2), built a deck (Canva), and updated the platform ref doc (filesystem). Want me to start that sequence?" |
-| "What's new in AI weather?" | Domain freshness | Earth-2 expert (Inform mode — check its SOURCES.md dates, then search) |
+| "What's new in AI weather?" | Domain freshness | Consult: check Earth-2 SOURCES.md dates, then search |
+| "Write me an inference pipeline for Atlas" | Sustained code work | Redirect: "This needs the Earth-2 expert's full context — open a session in `experts/earth2/`." |
 | "Build me a CFD expert" | Expert construction | Redirect to Pathfinder (`experts/pathfinder/`) |
 | "Is the Earth-2 expert up to date?" | Maintenance | Orchestrator handles directly — check SOURCES.md dates, produce freshness report |
