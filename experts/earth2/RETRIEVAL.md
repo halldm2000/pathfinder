@@ -1,68 +1,108 @@
 # Earth-2 Expert: Retrieval Strategy
 
-This expert runs as a Claude Code project or Cowork session. Retrieval uses Claude's built-in web search and web fetch tools rather than a custom RAG pipeline. The orientation doc handles stable knowledge; live search handles freshness.
+This expert runs as a Claude Code project or Cowork session. Retrieval follows a strict three-tier hierarchy: orientation doc first, reference docs second, web search last. The expert should feel fast — most questions are answerable in seconds from local context.
 
-## When to Search
+## Three-Tier Hierarchy
 
-**Always search before answering** when the question involves:
-- Specific version numbers, API signatures, or installation commands
-- Events or publications from the last 3 months
-- Benchmark comparisons or leaderboard positions
-- Model availability or release status
-- Breaking changes or migration guides
+### Tier 1: Orientation Doc (always loaded, instant)
 
-**Use orientation doc directly** when the question involves:
-- Model architecture and design (stable)
-- Resolution/timescale framework (stable)
-- Known limitations of AI weather models (slow-changing)
-- Comparing model categories or approaches (stable)
-- Atmospheric science fundamentals (stable)
+Answer directly from ORIENTATION.md when the question involves:
+- Model identity, purpose, and key differentiators ("What is Atlas?", "How does CorrDiff differ from StormScope?")
+- Architecture summaries and model relationships
+- Resolution/timescale framework
+- Known limitations of AI weather models
+- Comparing model categories or approaches
+- Field map and ecosystem structure
+- Atmospheric science fundamentals for ML weather
+- Any fact explicitly stated in the orientation doc
 
-**Search then synthesize** when the question involves:
-- "What's the latest on X?" (always search)
-- "Has anyone done X?" (search arXiv, then synthesize with orientation knowledge)
-- "How does X compare to Y?" (use orientation for structure, search for current numbers)
+**Rule: If the orientation doc has the fact, use it. Do not search.**
 
-## Search Patterns
+### Tier 2: Reference Docs (read on demand, milliseconds)
 
-### For Earth-2 model/tool questions
-1. Search GitHub releases: `site:github.com/NVIDIA/earth2studio` or `site:github.com/NVIDIA/physicsnemo`
-2. Search NVIDIA docs: `site:nvidia.github.io/earth2studio`
-3. Search Hugging Face: `site:huggingface.co nvidia earth-2`
-4. Fetch the specific page if you need API details
+Read the relevant file from `reference/` when the question goes deeper than the orientation doc covers:
+- "How does Atlas's latent space work?" → read `reference/atlas.md`
+- "What observation types does HealDA ingest?" → read `reference/healda.md`
+- "Show me Earth2Studio code" → read `reference/earth2studio.md`
+- "What's the CorrDiff NIM performance?" → read `reference/corrdiff.md`
+- "How does GenCast compare to Atlas in detail?" → read `reference/landscape.md` + `reference/atlas.md`
+- "What changed in PhysicsNeMo v2.0?" → read `reference/physicsnemo.md`
+- Architecture deep-dives, training details, paper specifics, code examples, performance numbers
+- Detailed comparisons requiring specifics from multiple models
 
-### For AI weather model landscape questions
-1. Search arXiv: `site:arxiv.org "AI weather" OR "machine learning weather prediction"` + model name
-2. Search Google Scholar or arXiv for the specific model/paper
-3. Check WeatherBench 2 for benchmark comparisons
+**Available reference docs:**
+- `reference/atlas.md` — Atlas architecture, three estimators, speed, paper
+- `reference/corrdiff.md` — CorrDiff downscaling, TWC deployment, NIM
+- `reference/stormscope.md` — StormScope modes, DiT architecture, vs HRRR
+- `reference/stormcast.md` — StormCast regional modeling, Science Advances paper
+- `reference/fcn3.md` — FCN3 probabilistic forecasting, BVMC, 60-day range
+- `reference/healda.md` — HealDA observation types, inference speed, sovereign role
+- `reference/earth2studio.md` — Earth2Studio API, run functions, code examples
+- `reference/physicsnemo.md` — PhysicsNeMo v2.0, Modulus migration
+- `reference/cbottle.md` — cBottle climate model, CMIP6 validation
+- `reference/aifs.md` — ECMWF AIFS, Anemoi framework, met service adoption
+- `reference/landscape.md` — GenCast, Aurora, FuXi, NeuralGCM, WeatherMesh, NOAA AI, ACE2
 
-### For operational deployment questions
-1. Search ECMWF news: `site:ecmwf.int AIFS`
-2. Search NOAA: `site:noaa.gov AI weather`
-3. Search Nature/Science for recent publications
+**Rule: Read the reference doc before web searching. If the reference doc answers the question, do not search.**
 
-### For code questions
-1. Search Earth2Studio examples: `site:nvidia.github.io/earth2studio/examples`
-2. Search GitHub issues for known problems: `site:github.com/NVIDIA/earth2studio/issues`
-3. Fetch the relevant example notebook or API reference directly
+### Tier 3: Web Search (last resort, seconds)
+
+Search the web only when:
+- The question is about events from the **last 2–4 weeks** (reference docs may not cover very recent releases)
+- The question asks for specific **version numbers, API signatures, or installation commands** that change between releases
+- The question is about a **topic not covered** by the orientation doc or any reference doc
+- The question explicitly asks "what's the latest" or "has anything changed recently"
+- **Benchmark leaderboard positions** (these shift frequently)
+- **New model releases or papers** not yet in the reference corpus
+
+**Rule: Do not web search for architecture, model relationships, training data, resolution, known limitations, or comparative framework. These are stable and covered by tiers 1–2.**
+
+## When NOT to Search
+
+The previous retrieval strategy was too aggressive about searching. These categories should almost never trigger web search:
+
+- **Model architecture and design** — stable, covered by orientation + reference docs
+- **How models relate to each other** — stable, covered by orientation doc
+- **Known limitations of AI weather models** — slow-changing, in orientation doc
+- **Earth2Studio core API patterns** — reference doc has code examples
+- **PhysicsNeMo migration from Modulus** — reference doc covers this
+- **Paper findings and key results** — reference docs have these
+- **AIFS/Anemoi framework and adoption** — reference doc covers this
+- **Landscape model capabilities** — reference doc covers GenCast, Aurora, FuXi, etc.
+
+If a fact in the orientation or reference doc says "as of [date]" and the date is **within the last 3 months**, trust it. Only search if the date is older than 3 months or the user specifically asks about very recent changes.
+
+## Search Patterns (when Tier 3 is warranted)
+
+### For Earth-2 model/tool freshness checks
+1. GitHub releases: `site:github.com/NVIDIA/earth2studio` or `site:github.com/NVIDIA/physicsnemo`
+2. NVIDIA docs: `site:nvidia.github.io/earth2studio`
+3. Hugging Face: `site:huggingface.co nvidia earth-2`
+
+### For AI weather model landscape updates
+1. arXiv: `site:arxiv.org "AI weather"` + model name
+2. WeatherBench 2 for benchmark comparisons
+3. ECMWF news: `site:ecmwf.int AIFS`
+
+### For operational deployment news
+1. NOAA: `site:noaa.gov AI weather`
+2. ECMWF: `site:ecmwf.int`
+3. Nature/Science for recent publications
+
+### For code questions beyond reference docs
+1. Earth2Studio examples: `site:nvidia.github.io/earth2studio/examples`
+2. GitHub issues: `site:github.com/NVIDIA/earth2studio/issues`
 
 ## Supplementary Local Context
 
-When deployed alongside David's CLAUDE-COWORK workspace, the following files contain additional Earth-2 context that may be more current than the orientation doc:
+When deployed alongside David's CLAUDE-COWORK workspace, these files contain additional Earth-2 context:
 
-- `/Users/dhall/Dropbox/WORK_NVIDIA/CLAUDE-COWORK/reference/earth2-platform.md` -- Comprehensive internal Earth-2 platform reference (models, partnerships, team, strategy). Updated from internal meetings and Slack.
-- `/Users/dhall/Dropbox/WORK_NVIDIA/CLAUDE-COWORK/reference/earth2-platform.html` -- HTML version of the above.
-- `/Users/dhall/Dropbox/WORK_NVIDIA/CLAUDE-COWORK/deliverables/earth2-tutorials-plan.html` -- Tutorial repository plan.
-- `/Users/dhall/Dropbox/WORK_NVIDIA/CLAUDE-COWORK/deliverables/earth2-platform-external.html` -- External-facing platform overview.
-
-These files may contain internal NVIDIA information. Use judgment about what is appropriate to surface in responses depending on the audience.
+- `/Users/dhall/Dropbox/WORK_NVIDIA/CLAUDE-COWORK/reference/earth2-platform.md` — Comprehensive internal reference (models, partnerships, team, strategy). May contain internal NVIDIA information — use judgment about what to surface depending on audience.
 
 ## Freshness Protocol
 
-This field moves fast. Follow these rules:
-
-1. **Any fact older than 3 months is suspect.** If the orientation doc says "as of [date]" and the date is >3 months ago, search for updates before stating it.
-2. **Benchmark numbers decay fastest.** Never cite a benchmark number without checking if there's a newer comparison.
-3. **API patterns are version-sensitive.** Earth2Studio and PhysicsNeMo have breaking changes between minor versions. Always check the installed version or latest release notes.
-4. **New models appear monthly.** If someone asks "what are the best AI weather models," search before answering to catch recent entrants.
-5. **Operational status changes are high-impact.** When a model goes from research to operational, that's a major event. Track ECMWF, NOAA, and national met service announcements.
+1. **Facts dated within the last 3 months are trusted.** Do not search for updates unless the user specifically asks.
+2. **Facts older than 3 months are suspect.** Search before stating them.
+3. **Benchmark numbers decay fastest.** Always search for benchmark leaderboard positions.
+4. **API patterns are version-sensitive.** If the user reports an error, check for breaking changes in latest release.
+5. **New models appear monthly.** If asked "what are the best AI weather models," check reference/landscape.md first, then search only for very recent entrants.
