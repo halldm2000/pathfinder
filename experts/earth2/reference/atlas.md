@@ -16,6 +16,14 @@
 - **ATLAS-SI**: Uses stochastic interpolants for sampling. Higher quality per sample but slower (~90s/step).
 - **ATLAS-EDM**: Diffusion-based sampling. Similar speed/quality trade-off as SI but uses EDM framework.
 
+**Headline verification scores (from arXiv:2601.18111, evaluated on 2020 ERA5, 56-member ensembles):**
+- ATLAS-SI outperforms GenCast on both CRPS and ensemble-mean RMSE through ~7 days. Beyond 7 days, differences are statistically indistinguishable (paired t-test, p < 0.05).
+- Surface winds (u10m, v10m): ~50% CRPS improvement over IFS-ENS at initialization, sustained >10% through day 6.
+- Z500: skill advantage over IFS-ENS converges toward baseline after ~12 days.
+- TC tracking (46 storms, 2020): ATLAS-SI ensemble-mean track error improves on GenCast beyond 80 hours lead time.
+- Paper uses relative percentage improvement heatmaps, not absolute CRPS/RMSE tables. No direct comparison to AIFS (noted as future work).
+- Paper claims: "State-of-the-art performance for a fully open model." NVIDIA marketing: "highest skill open model." The distinction matters.
+
 **Relationship to other entities:** Succeeds FourCastNet lineage (FCN1 → FCN2/SFNO → FCN3 → Atlas). Competes directly with GenCast and FuXi-ENS on probabilistic global forecasting. Uses ERA5 for training (like most global models). Inference can use GFS or HRES initial conditions. Available in Earth2Studio. Built on PhysicsNeMo.
 
 **Known issues / limitations:**

@@ -10,6 +10,7 @@
 - Key innovation: diffusion-based ensemble generation (each sample is a plausible forecast trajectory)
 - Inference speed: ~140 seconds per 12-hour step (compare Atlas-CRPS: 3.3s/step)
 - Open weights available. Successor to GraphCast (deterministic → probabilistic).
+- vs Atlas: Atlas-SI outperforms GenCast on CRPS/RMSE through ~7 days; beyond 7 days statistically indistinguishable. Atlas-CRPS is ~40x faster.
 - Limitation: slow inference relative to non-diffusion approaches
 
 **Aurora (Microsoft Research)**

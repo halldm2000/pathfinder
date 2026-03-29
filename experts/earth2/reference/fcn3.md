@@ -20,6 +20,8 @@
 - HENS framework uses SFNO/FCN3 to produce 7,424-member ensembles at 5 orders of magnitude lower cost than traditional ensembles
 - Used by JBA (flood risk) and AXA (hurricane risk) for insurance applications
 
+**Verification status:** No published benchmark scorecard as of March 2026. Under evaluation at NOAA EMC (J. Wang) and The Weather Company (Montgomery Flora). The paper (Bonev et al. 2025) demonstrates spectral fidelity at extended lead times but does not publish head-to-head CRPS/RMSE tables against AIFS or GenCast. Expect published scores when NOAA/TWC evaluations complete.
+
 **Relationship to other entities:** Latest in the FourCastNet lineage (FCN1 → FCN2/SFNO → FCN3). Complementary to Atlas: Atlas has higher skill at medium range (1–15d), FCN3 extends to subseasonal (15–60d). Being tested as input to CorrDiff for severe weather applications. HENS framework built on FCN3/SFNO. Available in Earth2Studio.
 
 **Known issues / limitations:**
