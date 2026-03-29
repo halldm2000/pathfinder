@@ -130,6 +130,16 @@ When an expert runs as a Claude Code project, it has two independent knowledge s
 
 **The boundary:** Memory is for user context. Reference docs are for domain knowledge. If an expert learns something via memory that is actually domain knowledge other users would benefit from (e.g., a model API changed, a new deployment pattern emerged), that knowledge should be promoted to a reference doc via Pathfinder — not left in a personal memory file.
 
+**Shared memory in monorepo deployments:** When multiple experts live in the same git repository (the current Pathfinder model), all experts started from that project tree may share the same Claude Code memory directory. This means memories written by one expert are visible to all others and to Pathfinder itself.
+
+This is a feature, not a bug, at small scale — the user's role, preferences, and project context are genuinely useful across experts. But it requires discipline:
+
+- **Save to memory:** User preferences and working context that benefits all experts (role, audience level, colleague names, project goals, active deadlines, feedback on response style)
+- **Don't save to memory:** Domain facts (put in reference docs), expert-specific corrections (route through Pathfinder), conversation-specific working state (ephemeral)
+- **Be mindful of noise.** Every memory saved is loaded into every future conversation with every expert. If the memory wouldn't help the next expert, don't save it.
+
+If memory pollution becomes a problem at scale (10+ experts), the mitigation is deploying experts from their own subdirectories, which may scope memory separately. Test this by checking the memory path when starting Claude Code from `experts/{name}/` vs the repo root.
+
 **Why this matters for the orchestrator:** A future orchestrator that refreshes reference docs won't see or touch Claude Code memories. Conversely, Claude Code memory won't be aware of orchestrator-driven reference doc updates. The two systems are complementary but disconnected. Design accordingly: don't put domain facts in memory, don't put user preferences in reference docs.
 
 ## Reference Document Patterns

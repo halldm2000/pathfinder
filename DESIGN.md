@@ -202,6 +202,8 @@ These two systems are complementary but disconnected:
 
 The boundary: domain facts belong in Pathfinder artifacts. User context belongs in memory. If something learned via memory is actually domain knowledge (e.g., "the API changed in v3.2"), it should be promoted to a reference doc via Pathfinder. The orchestrator manages Pathfinder artifacts only — it does not read or write Claude Code memory files.
 
+**Shared memory in monorepo:** All experts in the same repo may share a single Claude Code memory directory. This is acceptable — user context (role, preferences, projects) is useful across experts. Experts should save only cross-expert user context to memory, not domain-specific facts or conversation ephemera. See ORIENTATION.md "Dual Knowledge Layers" for the full policy.
+
 ## Embedding and Retrieval
 
 **Embedding model (auto-detected):**
