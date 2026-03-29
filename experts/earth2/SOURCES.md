@@ -2,7 +2,8 @@
 
 Sources for ingestion and ongoing monitoring. Organized by type and priority.
 
-## Primary Sources (check weekly or more)
+## Primary Sources (check weekly)
+Last checked: 2026-03-29
 
 ### NVIDIA Earth-2
 - **Earth2Studio GitHub**: github.com/NVIDIA/earth2studio (releases, changelogs, new models)
@@ -23,6 +24,7 @@ Sources for ingestion and ongoing monitoring. Organized by type and priority.
 - **ECMWF AI Weather Quest**: ecmwf.int AI Weather Quest pages (sub-seasonal competition results)
 
 ## Secondary Sources (check monthly)
+Last checked: 2026-03-29
 
 ### Operational Deployment
 - **NOAA announcements**: noaa.gov/news-release (AI model deployments, new capabilities)

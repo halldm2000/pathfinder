@@ -94,6 +94,10 @@ with explicit caveats. You are not an expert in [Z] — redirect these.
 
 **Reference docs** should contain: (1) One file per major entity, (2) Structured format (what it is, key details, how to use it, relationships, known issues, sources), (3) 500–2,000 tokens each, (4) Prioritized by expected question frequency, (5) Headline verification scores where applicable — 2–3 key metrics with "as of" dating; if scores aren't yet published, state that explicitly rather than leaving a silent gap.
 
+**SOURCES.md** should list sources organized by priority group (Primary, Secondary), each with a check cadence and `last_checked` date. See CONVENTIONS.md for the format specification.
+
+**NEWS.md** is the user-facing changelog. Newest entries first, dated, editorial (not a doc diff). Written by the Orchestrator during freshness checks or by the expert when it discovers something new in conversation. Entries answer: what changed, why it matters, when. Entries older than 3 months can be pruned — the reference docs already reflect the change.
+
 **Scoping summary** should capture: domain, audience, tasks, boundaries, archetype (primary + secondary), domain velocity, failure cost, existing resources.
 
 **Evaluation scorecard** should report: probe name, pass/fail, evidence (what the expert said), recommendation (what to fix).

@@ -16,7 +16,8 @@ Pathfinder (meta-expert, MCP server)
 │   │   ├── PERSONA.md          <- system instructions
 │   │   ├── ORIENTATION.md      <- briefing book (2-5k tokens, always loaded)
 │   │   ├── reference/          <- deep-dive docs (500-2k tokens each, read on demand)
-│   │   ├── SOURCES.md          <- ingestion + monitoring sources
+│   │   ├── SOURCES.md          <- ingestion + monitoring sources (with last_checked dates)
+│   │   ├── NEWS.md             <- user-facing changelog (what changed, why it matters)
 │   │   ├── RETRIEVAL.md        <- retrieval strategy (three-tier hierarchy)
 │   │   ├── knowledge.db        <- SQLite + vector embeddings (optional, for large corpora)
 │   │   └── sources/            <- cached raw content
@@ -109,6 +110,7 @@ Add autonomous capabilities to the builder and serving layers.
 - New content is ingested, chunked, and added to the retrieval index
 - High-importance updates flagged for orientation document revision
 - Staleness detection: flag retrieval chunks that contradict newer information
+- NEWS.md entries appended for every update (see CONVENTIONS.md for format)
 
 **Expert export:**
 - `pathfinder export {name}` produces a standalone MCP server package
@@ -126,8 +128,8 @@ Add autonomous capabilities to the builder and serving layers.
 Experts don't maintain themselves — Pathfinder maintains them. A centralized orchestrator is preferred over N independent expert update jobs.
 
 - One orchestrator process runs on a secondary machine (not the user's primary dev laptop). Suitable machines: a DGX Spark (if GPU-backed verification is needed), a desktop, or a secondary laptop.
-- The orchestrator cycles through experts by priority, using each expert's SOURCES.md to determine what to check and how often.
-- For each expert: fetch fresh content from sources, diff against current reference docs, rewrite what's changed, update "as of" dates.
+- The orchestrator cycles through experts by priority, using each expert's SOURCES.md to determine what to check and how often. The freshness protocol (check routine per source type, update thresholds, cadences) is now defined in CONVENTIONS.md — the orchestrator follows that protocol.
+- For each expert: fetch fresh content from sources, diff against current reference docs, rewrite what's changed, update "as of" dates, append NEWS.md entries.
 - Produces git commits on a branch. The user pulls updates when ready — no disruption to active work.
 - The orchestrator is a Pathfinder feature, not an expert feature. Individual experts never schedule their own updates. This keeps the boundary clean and avoids resource contention from multiple independent cron jobs.
 - Open question: should the orchestrator also manage Claude Code memory files, or only Pathfinder-managed artifacts? Current recommendation: only Pathfinder artifacts. Memory files are personal and conversation-driven — they don't belong in a batch refresh cycle.
@@ -155,7 +157,7 @@ v1's create-expert is a guided conversation, not autonomous research. Reasons:
 
 ### Each expert is files + reference docs
 
-An expert is fully defined by PERSONA.md, ORIENTATION.md, reference/ directory, SOURCES.md, and RETRIEVAL.md. The knowledge.db (vector index) is optional and derived from these. This means:
+An expert is fully defined by PERSONA.md, ORIENTATION.md, reference/ directory, SOURCES.md, NEWS.md, and RETRIEVAL.md. The knowledge.db (vector index) is optional and derived from these. This means:
 
 1. Experts are human-readable and human-editable
 2. Experts can be version-controlled (git)
@@ -186,7 +188,8 @@ Expert archetypes are design accelerators, not rigid categories. Identifying the
       ORIENTATION.md              <- briefing book (always loaded)
       reference/                  <- deep-dive entity docs (read on demand)
         {entity}.md               <- one file per key entity (500-2k tokens)
-      SOURCES.md                  <- ingestion + monitoring sources
+      SOURCES.md                  <- ingestion + monitoring sources (with last_checked dates)
+      NEWS.md                     <- user-facing changelog (what changed, why it matters)
       RETRIEVAL.md                <- retrieval strategy (three-tier hierarchy)
       knowledge.db                <- SQLite with embeddings (optional, for large corpora)
       sources/                    <- cached raw content

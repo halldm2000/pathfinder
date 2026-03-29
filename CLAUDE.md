@@ -40,13 +40,25 @@ See ORIENTATION.md for the full capability map, including: Worldscope (3D globe,
 
 ## Expert Maintenance
 
-On demand or on schedule:
-1. Scan `experts/*/PERSONA.md` — discover all experts
-2. Check each expert's SOURCES.md for freshness dates
-3. Produce a **freshness report** — what's stale, what's new
-4. For minor updates: update the expert's ORIENTATION.md directly
-5. For major structural changes: route to Pathfinder (`experts/pathfinder/`)
-6. Check each expert against CONVENTIONS.md — flag non-compliance
+On demand or on schedule. See CONVENTIONS.md for the full freshness protocol — this section describes the Orchestrator's workflow.
+
+### Freshness Sweep
+
+1. **Discover experts.** Scan `experts/*/PERSONA.md`.
+2. **For each expert with a SOURCES.md:**
+   a. Read SOURCES.md — check `last_checked` dates against the cadence (Primary: weekly, Secondary: monthly).
+   b. For each stale group, run the check routine per source type (see CONVENTIONS.md table).
+   c. Update `last_checked` dates in SOURCES.md.
+3. **When new information is found:**
+   a. **Minor updates** (new version, updated benchmark, new paper in existing landscape): update the expert's reference docs or ORIENTATION.md directly. Commit with a descriptive message.
+   b. **Major structural changes** (new entity needing a reference doc, scope change, new source category): flag for Pathfinder. Do not redesign the expert yourself.
+   c. **Append to NEWS.md** — write a user-facing entry: what changed, why it matters, when. This is editorial, not a doc diff.
+4. **Produce a freshness report** summarizing: what was checked, what was found, what was updated, what needs Pathfinder.
+5. **Check compliance** against CONVENTIONS.md — flag any non-compliance.
+
+### News Summary
+
+On session start or on demand, read `experts/*/NEWS.md` and summarize recent updates across all experts. This gives David a "what's new" briefing without requiring him to check each expert individually.
 
 ## Confidence Calibration
 
