@@ -77,15 +77,16 @@ An MCP server that automates what v0 does manually.
 
 When the user says "create me an expert on X," Pathfinder runs a guided conversation, not autonomous research:
 
-1. Ask scoping questions (domain, audience, tasks, boundaries, domain velocity, failure cost)
-2. Identify the expert archetype (Scientific, Tool/Platform, Advisory, Technical Reference, Creative, or blended)
-3. Draft a persona based on the archetype + user responses
-4. Draft an orientation document, asking the user to verify key facts and fill gaps
-5. Suggest sources for ingestion and monitoring
-6. Run the six-probe evaluation and iterate
-7. Save all artifacts to `~/.pathfinder/experts/{name}/`
+1. Assess whether an expert is warranted (Step 0 pre-check)
+2. Ask scoping questions (domain, audience, tasks, boundaries, velocity, failure cost)
+3. Identify the expert archetype (see ORIENTATION.md for definitions)
+4. Draft a persona based on archetype + user responses
+5. Draft an orientation document, asking the user to verify key facts and fill gaps
+6. Suggest sources for ingestion and monitoring
+7. Run the six-probe evaluation (see ORIENTATION.md) and iterate
+8. Save all artifacts to `~/.pathfinder/experts/{name}/`
 
-This is collaborative. The user's domain knowledge combined with Pathfinder's knowledge of expert design produces better results than either alone.
+This is collaborative. The user's domain knowledge combined with Pathfinder's expert-design knowledge produces better results than either alone.
 
 ### v2: Agentic Research + Monitoring
 
@@ -152,7 +153,7 @@ Most MCP servers only use tools. Using all three means the LLM can decide how to
 
 ### Archetype-driven design
 
-Expert archetypes (Scientific, Tool/Platform, Advisory, Technical Reference, Creative) are not rigid categories — they are design accelerators. Identifying the archetype early in the scoping process gives the builder a template for persona emphasis, orientation doc structure, retrieval priorities, and monitoring sources. This captures the patterns that emerge from building many experts, so each new expert benefits from prior experience.
+Expert archetypes are design accelerators, not rigid categories. Identifying the archetype early gives the builder a template for persona emphasis, orientation doc structure, retrieval priorities, and monitoring sources. See ORIENTATION.md for archetype definitions and design implications.
 
 ## Storage Layout
 
@@ -198,13 +199,4 @@ This is how experts learn from their users. The teach mechanism is more valuable
 
 ## The `evaluate` Tool
 
-Runs the six-probe evaluation suite against any expert:
-
-1. **Boundary probe** — generates questions just outside scope, checks for clean redirection
-2. **Staleness check** — asks about recent domain developments, checks for uncertainty flagging
-3. **Calibration test** — asks obscure questions, checks for honest "I don't know" responses
-4. **Contradiction probe** — states incorrect facts, checks whether the expert corrects them
-5. **Depth test** — asks for specific numbers/versions, checks for precision vs. vagueness
-6. **Comparison test** — asks for comparisons, checks for structured output format
-
-Returns a scorecard with pass/fail per probe and specific recommendations for improvement. This is the feedback loop that makes experts get better over time.
+Runs the six-probe evaluation suite (boundary, staleness, calibration, contradiction, depth, comparison) against any expert. Returns a scorecard with pass/fail per probe and specific recommendations for improvement. See ORIENTATION.md for probe definitions and scoring criteria.
