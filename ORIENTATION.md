@@ -1,83 +1,124 @@
-# Pathfinder Orientation: The State of AI Expert Systems
+# Pathfinder Orientation: The Craft of Building AI Experts
 
-This document is the briefing book for the Pathfinder expert-builder. It contains the current state of knowledge about building effective AI domain experts, distilled for use as in-context reference material.
+This is the briefing book for the Pathfinder expert-builder. It contains specific, actionable knowledge about building effective AI domain experts — the precise facts, numbers, and patterns that make the difference between an expert that works and one that confidently fails.
 
-## The Core Problem
+Last updated: March 2026. Model knowledge cutoff context: Claude's training data extends through early 2025. Anything after that date needs to be in the orientation doc or RAG layer.
 
-Large language models have broad knowledge but lack depth, precision, and currency in any specific domain. Users who need expert-level assistance (a researcher asking about a specific model's resolution, an engineer debugging an API call, a decision-maker comparing tools) get answers that are approximately right but not reliably precise.
+## Token Budgets That Work
 
-The standard approach, retrieval-augmented generation (RAG), treats this as a knowledge gap: stuff more documents into the model's context. This works but is inefficient. Most of the retrieved content covers things the model already knows from training. The real gaps are narrower: specific numbers, recent changes, precise configurations, and domain-specific judgment about what matters.
+**Persona (system prompt): 800–2,000 tokens.** Under 800 and you cannot encode scope boundaries, reasoning style, and failure modes together. Over 2,000 and the model starts losing track of instructions — later instructions contradict or dilute earlier ones. The sweet spot for most domains is 1,200–1,500 tokens.
 
-## The Context Engineering Approach
+**Orientation document: 2,000–5,000 tokens.** This is loaded into every conversation. Under 2,000 and you are probably not correcting enough stale facts. Over 5,000 and you are including things the model already knows — which wastes context and can actually degrade performance by diluting the high-value corrections with redundant information.
 
-Pathfinder treats expert-building as context engineering rather than knowledge engineering. The distinction:
+**RAG chunks returned per query: 3–5 chunks, 300–500 tokens each.** Returning more than 5 chunks floods the context with marginally relevant content. If you consistently need more than 5, your orientation doc is not doing its job. Total retrieval budget per query: 1,500–2,500 tokens.
 
-Knowledge engineering asks "how do we give the model all the information it needs?" This leads to large corpora, aggressive retrieval, and high token costs.
+**Total expert context per conversation: under 8,000 tokens.** Persona + orientation + retrieval. This leaves the vast majority of the context window for the actual conversation. Experts that consume 20k+ tokens of context upfront are knowledge dumps disguised as experts.
 
-Context engineering asks "what is the minimum, highest-quality context that makes the model maximally effective in this domain?" This leads to three layered interventions, each targeting a different failure mode.
+## Prompt Patterns That Actually Work
 
-**Layer 1: Persona (system prompt).** Targets the attention allocation problem. The model has relevant knowledge in its weights but distributes attention across all topics equally in a general conversation. A domain-specific persona activates relevant knowledge, sets appropriate priors for depth and precision, and encodes domain-specific judgment (what to emphasize, what to flag as uncertain, what mistakes to avoid). This is the highest-leverage intervention because it reshapes every response without consuming retrieval tokens.
+**Scope triplet.** Define three zones: in-scope (answer confidently), adjacent (answer with caveats), and out-of-scope (redirect). This is the single most effective hallucination reduction technique for domain experts. Without it, the model tries to be helpful on everything and invents plausible-sounding answers.
 
-**Layer 2: Orientation document (in-context reference).** Targets the staleness and precision problems. A curated 2,000-5,000 token document loaded into every conversation. It corrects facts the model's training got wrong, provides the current state of a fast-moving field, and gives the model an explicit structure (key entities, their relationships, recent changes) to reason against. Think of it as a cheat sheet, not an encyclopedia.
+```
+You are an expert in [X]. Adjacent topics include [Y] — answer these
+with explicit caveats about your confidence. You are not an expert
+in [Z] — redirect these questions rather than attempting an answer.
+```
 
-**Layer 3: Retrieval (RAG).** Targets the specificity problem. When the model needs an exact API signature, a quoted passage from a paper, or a detailed specification that is too granular for the orientation document, it queries a vector index. This should fire on a minority of interactions, not every one. If retrieval is needed for most queries, the orientation document is not doing its job.
+**Confidence tiers.** Instruct the expert to distinguish three levels: confirmed (in the orientation doc), believed (from training, possibly stale), and unknown. This eliminates vague hedging ("it might be around 25km") in favor of explicit uncertainty ("my training suggests 25km, but this may be outdated — check the latest docs").
 
-**Layer 4: Monitoring.** Targets the currency problem. Watches external sources (arXiv, blogs, release notes, social media) for new developments. New content flows into the orientation document (for high-importance updates) and the retrieval index (for details). This is what makes the expert self-maintaining rather than a snapshot that decays.
+```
+When stating facts, indicate your confidence:
+- "The orientation doc confirms..." (verified, current)
+- "My training suggests... but this may be outdated" (unverified)
+- "I don't have this information" (unknown — never guess)
+```
 
-## Persona Design: What Works
+**Structured response templates.** For experts that make recommendations or comparisons, specify the output structure. Models follow structural instructions more reliably than behavioral ones. "Always include limitations" is weaker than "End every recommendation with a Limitations section listing at least two constraints."
 
-Effective personas share these traits:
+**Negative examples in failure modes.** "Do not confuse X with Y" works. But "Do not confuse X with Y — X is [specific difference], while Y is [specific difference]" works significantly better. The correction needs to include the correct fact, not just flag the error.
 
-**Tight scope boundaries.** "You are an expert in X" is not enough. The persona must specify what is in scope, what is adjacent (answer with caveats), and what is out of scope (redirect). Unbounded experts hallucinate more because the model tries to be helpful beyond its configured knowledge.
+**First-person domain identity.** "You are a domain expert in..." outperforms "You have knowledge about..." The identity framing causes the model to adopt domain-appropriate reasoning patterns, not just retrieve domain facts.
 
-**Explicit reasoning instructions.** Not just "be precise," but specific guidance: "When comparing models, always list input requirements, output resolution, computational cost, and known limitations. Do not recommend a model without stating what it cannot do." These instructions shape the structure of every response.
+## Orientation Document Patterns
 
-**Documented failure modes.** Every domain has things LLMs get predictably wrong. The persona should list them as explicit warnings: "Do not confuse X with Y. The commonly cited figure of Z is outdated; the current value is W." These are the highest-value sentences in the entire persona because they prevent the most damaging errors.
+**Lead with the field map.** 3–5 sentences establishing the domain structure: what the major entities are, how they relate, and what the current state of play is. This gives the model a skeleton to hang everything else on. Without it, individual facts float unanchored.
 
-**Calibrated confidence.** The persona should instruct the model to distinguish between facts it is confident about (because they are in the orientation doc), facts it is less sure about (from training, possibly stale), and things it does not know. Vague hedging ("it might be around 25km") is worse than explicit uncertainty ("my training data says 25km, but this may be outdated; check the latest model card").
+**Entity blocks, not prose.** For each key entity in the domain, use a consistent format:
 
-## Orientation Documents: What Works
+```
+### [Entity Name]
+- What it is: [one sentence]
+- Key facts: [specifics the model might get wrong — versions, dates, numbers]
+- Relationships: [how it connects to other entities in this domain]
+- Common misconceptions: [what people/models get wrong about this]
+- As of: [date of last verification]
+```
 
-The orientation document is the hardest artifact to write well because it requires ruthless curation. Every token must earn its place.
+This format is scannable. The model can locate the relevant block quickly. Prose paragraphs bury facts and force the model to extract them.
 
-**Structure matters more than completeness.** The model needs to scan the document quickly to find relevant context. Use clear headers, consistent formatting for entities (name, key facts, relationships), and a predictable structure. Do not bury critical facts in prose paragraphs.
+**Date every fact that could go stale.** "CorrDiff runs at 2km resolution" will mislead if that changes. "As of March 2026, CorrDiff produces 2km resolution output" tells the model when this fact was verified, letting it calibrate confidence on older facts.
 
-**Prioritize facts the model gets wrong.** If the model reliably knows that "FourCastNet is a weather prediction model," that sentence is wasted tokens. If the model commonly confuses CorrDiff's training resolution with its inference resolution, that distinction earns a prominent place.
+**Correct, don't teach.** If the model already knows a fact reliably from training, omit it. The orientation doc's job is to fix what the model gets wrong and add what it doesn't know. Every sentence that restates common knowledge is a sentence that could have carried a correction.
 
-**Include relationships, not just entities.** "CorrDiff is a model" is less useful than "CorrDiff is a generative super-resolution model that takes coarse global forecast fields (from FourCastNet or GFS) as input and produces high-resolution regional output. It does not produce forecasts independently." The relationship to other entities is often what the model gets wrong.
+**Include contradictions explicitly.** If sources disagree, say so: "Source A says X, Source B says Y. As of [date], the community consensus is Z, but this is debated." This prevents the model from confidently picking whichever version its training favored.
 
-**Date everything.** "CorrDiff runs at 2km resolution" is less useful than "As of March 2026, CorrDiff produces 2km resolution output over CONUS, up from the originally published 25km." The date signals to the model that this is a correction of potentially stale training data.
+## Retrieval (RAG) — When and How
 
-**Flag contradictions.** If different sources disagree, say so explicitly rather than picking one. The model can then present both perspectives rather than confidently stating whichever one its training favored.
+**RAG is for specifics, not for knowledge.** If you are retrieving content to answer most queries, your orientation doc is underbuilt. RAG should fire on the minority of interactions that need: exact quotes, API signatures, detailed specifications, code examples, or cited passages.
 
-## Retrieval Strategy: What Works
+**Embedding models (as of March 2026):**
+- Best local option: `nomic-embed-text` via Ollama (~270MB, 768 dimensions, strong on technical content)
+- Pure JS fallback: `@xenova/transformers` ONNX models (no external deps, slightly lower quality)
+- Cloud option: OpenAI `text-embedding-3-small` (1536 dims, best quality, requires API key)
+- For most expert domains with under 10k chunks, the quality difference between these is negligible. Pick based on deployment constraints, not benchmarks.
 
-**Chunk at semantic boundaries.** Do not split in the middle of a paragraph or code block. Respect section headers, function definitions, and logical breaks. A chunk that starts mid-thought is nearly useless for retrieval.
+**Chunking rules:**
+- Respect semantic boundaries: never split mid-paragraph, mid-code-block, or mid-section
+- Target 300–500 tokens per chunk with 50–75 token overlap
+- Attach metadata to every chunk: source URL, document title, section breadcrumbs, ingestion date, source type
+- User corrections (`teach` entries) get a retrieval ranking boost — they are always high-signal
 
-**Attach rich metadata.** Every chunk needs: source URL, document title, section header chain (breadcrumbs), ingestion date, source type (paper, docs, blog, tweet, user correction). This metadata is what makes citations possible and lets the model assess source quality.
+**Reindex when you update.** When the orientation doc changes, chunks that contradict it should be flagged or removed. Stale chunks in the retrieval index are how experts give confident-but-outdated answers — the worst failure mode.
 
-**Prefer fewer, higher-quality chunks.** Returning 20 chunks to "be safe" floods the context with marginally relevant content and pushes out the orientation document's carefully curated material. Three to five highly relevant chunks is usually better.
+## MCP Deployment (as of March 2026)
 
-**User corrections get priority.** Content added via the `teach` mechanism should be boosted in retrieval ranking. If a user explicitly corrected a fact, that correction is more likely to be relevant to future queries on the same topic than a random paragraph from a paper.
+**MCP SDK:** `@modelcontextprotocol/sdk` (TypeScript). Stable, well-documented. The three primitives — Prompts, Resources, Tools — map cleanly to expert delivery:
+- **Prompts:** Conversation starters that load the persona + orientation (e.g., "Expert mode: {name}")
+- **Resources:** Orientation docs and knowledge files, loaded on demand by the LLM
+- **Tools:** Active operations — search, teach, add-source, whats-new
 
-**Reindex, do not just append.** When the orientation document is updated, existing chunks that contradict it should be flagged or downranked. Stale chunks in the retrieval index are how experts give confident-but-outdated answers, which is the worst failure mode.
+**Client support:** Claude Desktop, Claude Code, Cursor, Windsurf, and other IDE integrations support MCP. Claude Desktop is the most complete client for resource and prompt support. Some clients only support tools. Design experts to work tool-only as a fallback.
 
-## Monitoring: What Works
+**Practical limitation:** Not all MCP clients expose resources or prompts in their UI. The safest deployment strategy is: core knowledge in the persona (always loaded via system prompt), orientation doc as a resource (loaded by clients that support it), and a `get-orientation` tool as fallback (for clients that don't).
 
-**Watch primary sources, not aggregators.** The official NVIDIA blog is a better source for Earth-2 updates than a tech news site summarizing the blog post. Primary sources are more precise, more timely, and less likely to introduce errors.
+**Distribution:** `npx @your-org/expert-name` is the simplest install path. The user adds one entry to their MCP client config and gets the full expert.
 
-**Define "meaningful update" per source.** An arXiv paper with a new model architecture is meaningful. A blog post that rehashes an existing paper is noise. The monitoring system (or the agent doing monitoring) needs criteria for what to ingest versus what to skip.
+## Expert Anti-Patterns
 
-**Updates flow into the right layer.** A major new model release should update the orientation document (it changes the field structure). A bug fix in an API should go into the retrieval index (it is a detail). A correction to a known fact should update the orientation document AND flag contradicting chunks in the index.
+**The knowledge dump.** Stuffing 50k tokens of documentation into context. The model drowns in marginally relevant content and loses track of the high-value corrections. Less is more — a 3,000-token curated orientation doc outperforms a 50,000-token dump every time.
 
-**Frequency matches the domain.** AI research moves weekly. Oceanographic data updates monthly. Regulatory frameworks change quarterly. The monitoring schedule should match the domain's pace, not a fixed interval.
+**The vague persona.** "You are helpful and knowledgeable about X." This activates nothing. The model is already helpful and knowledgeable about X. The persona needs to encode specific *judgment*: what to emphasize, what to flag, what mistakes to avoid, how to structure responses.
 
-## What This Means for Implementation
+**The retrieval crutch.** Building a huge vector index and a one-paragraph persona. The persona does the heavy lifting; retrieval supplements it. Inverting this ratio produces an expert that is slow (retrieves on every query), inconsistent (depends on retrieval ranking), and shallow (no encoded judgment).
 
-The simplest useful implementation of a Pathfinder expert requires no MCP server, no RAG infrastructure, and no monitoring daemon. It is two markdown files (persona + orientation) that you paste into a conversation. This is the v0.
+**Missing scope boundaries.** An expert without explicit out-of-scope boundaries will hallucinate in adjacent domains. The model wants to be helpful — it will attempt answers it should decline. Every persona needs a "what I am not" section.
 
-The next step (v1) adds an MCP server that serves the persona as a prompt, the orientation as a resource, and a retrieval index as a tool. This automates what the user would otherwise do by hand (paste the files, then manually search for details).
+**No staleness plan.** An expert that gives confident but outdated answers is worse than no expert. If the domain moves faster than quarterly, you need a monitoring plan. If you don't have one, add a warning to the persona: "My knowledge may be outdated after [date]. Flag any facts I state that seem inconsistent with recent developments."
 
-The full implementation (v2+) adds monitoring, automatic orientation document updates, an ingestion pipeline for new sources, the `teach` mechanism for user corrections, and export as distributable packages.
+**Over-engineering v0.** Building RAG infrastructure before the persona and orientation doc are proven. Start with two files. Test them. Fix what's wrong. Only add retrieval when you find specific questions that the orientation doc can't answer because the facts are too granular.
 
-Each step adds genuine value. But the v0 (two files) captures most of the benefit. The diminishing returns curve is steep.
+## Evaluation: How to Test an Expert
+
+**Boundary probe.** Ask 5 questions that are just outside the expert's scope. A good expert redirects cleanly. A bad one attempts an answer and hallucinates.
+
+**Staleness check.** Ask about something that changed recently in the domain. Does the expert flag uncertainty, or state the outdated fact confidently?
+
+**Calibration test.** Ask about something obscure that the expert probably doesn't know. Does it say "I don't know" or does it fabricate a plausible answer?
+
+**Contradiction probe.** State an incorrect fact and see if the expert corrects you (using its orientation doc) or agrees with you.
+
+**Depth test.** Ask a question that requires specific numbers, versions, or configurations. Vague answers ("around 25km") indicate the orientation doc is missing precision.
+
+**Comparison test.** Ask the expert to compare two things in its domain. Does the response follow the structured format the persona specifies, or does it free-form?
+
+These six probes, run after building any expert, will catch the most common failure modes before users encounter them.
