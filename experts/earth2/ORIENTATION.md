@@ -80,6 +80,32 @@ Earth-2 is organized into five pillars: Data, Models, Libraries (Earth2Studio, P
 
 **Other tools:** Torch Harmonics (spherical harmonic transforms), NIM microservices (CorrDiff, FourCastNet), HENS framework (7424-member ensembles).
 
+## Worldscope — Visualization and Demo Tool
+
+Worldscope is a CesiumJS 3D globe application for visualizing Earth-2 model outputs interactively. Treat it as a tool for accomplishing Earth-2 goals, not a development project to build.
+
+**What you can do with Worldscope:**
+- **Demo Earth-2 models live:** Show AI weather forecasts on a 3D globe — temperature, wind, pressure, precipitation overlaid on real geography. Compelling for stakeholder demos, conference presentations, and DevRel content.
+- **Visual verification:** Compare model outputs against observations or other models by toggling layers. Spot-check forecasts by clicking locations to see values.
+- **Explore forecast evolution:** Step through forecast time steps with a time slider, or animate to show weather system progression. Useful for case studies (e.g., "how did Atlas handle Hurricane X?").
+- **Multi-model comparison:** Display outputs from different Earth-2 models side by side or as switchable layers.
+- **Ensemble visualization:** Show probability maps, ensemble spread, and confidence from Atlas-CRPS or FCN3 BVMC ensembles.
+
+**Which Earth-2 models feed Worldscope:**
+
+| Model | Worldscope use case |
+|-------|-------------------|
+| Atlas | Global forecast overlays (temperature, wind, pressure, geopotential). Primary model. |
+| StormScope | Convective-scale nowcasting overlay when zoomed to CONUS. Satellite + radar imagery. |
+| CorrDiff | High-resolution downscaled fields (2km) when zoomed below global model resolution. |
+| FCN3 | Extended-range forecasts (up to 60 days). Large ensemble spread visualization. |
+| cBottle | Climate scenario visualization — toggle between SSP emission pathways. |
+| HealDA | (Future) Fully AI pipeline: ML-assimilated initial conditions → forecast → visualization. |
+
+**Integration architecture (summary):** Three layers — GPU inference (Earth2Studio → Zarr), tile service (FastAPI + xarray → PNG tiles), Worldscope frontend (CesiumJS imagery provider). For detailed architecture and code examples, read `worldscope-integration.md`.
+
+**When to recommend Worldscope:** Whenever the user needs to visualize, demo, verify, or explore Earth-2 model output interactively. If the question is "how do I show this forecast to someone" or "how do I visually check this output," the answer likely involves Worldscope.
+
 ## Landscape: Major External AI Weather/Climate Models
 
 **ECMWF AIFS** -- Operational since Feb 2025 (deterministic) and Jul 2025 (ensemble, 51 members). GNN + transformer. 28km. Uses same initial conditions as IFS. ~1000x less energy than IFS. Open weights on Hugging Face. Anemoi framework (open-source) adopted by 11+ national met services.

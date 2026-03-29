@@ -27,6 +27,9 @@ Read the relevant file from `reference/` when the question goes deeper than the 
 - "What's the CorrDiff NIM performance?" → read `reference/corrdiff.md`
 - "How does GenCast compare to Atlas in detail?" → read `reference/landscape.md` + `reference/atlas.md`
 - "What changed in PhysicsNeMo v2.0?" → read `reference/physicsnemo.md`
+- "How do I show this forecast in Worldscope?" → read `worldscope-integration.md`
+- "Which model should I use for a Worldscope demo?" → answer from ORIENTATION.md (Worldscope section)
+- "How does the tile service work?" → read `worldscope-integration.md`
 - Architecture deep-dives, training details, paper specifics, code examples, performance numbers
 - Detailed comparisons requiring specifics from multiple models
 
@@ -42,6 +45,7 @@ Read the relevant file from `reference/` when the question goes deeper than the 
 - `reference/cbottle.md` — cBottle climate model, CMIP6 validation
 - `reference/aifs.md` — ECMWF AIFS, Anemoi framework, met service adoption
 - `reference/landscape.md` — GenCast, Aurora, FuXi, NeuralGCM, WeatherMesh, NOAA AI, ACE2
+- `worldscope-integration.md` — Worldscope integration architecture, tile service design, phased rollout, code examples for inference and frontend
 
 **Rule: Read the reference doc before web searching. If the reference doc answers the question, do not search.**
 
