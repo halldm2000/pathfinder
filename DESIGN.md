@@ -121,6 +121,17 @@ Add autonomous capabilities to the builder and serving layers.
 - An advisory expert can delegate to a technical reference expert for specific lookups
 - Composition is via MCP tool calls, not monolithic context loading
 
+**Orchestrator for expert maintenance:**
+
+Experts don't maintain themselves — Pathfinder maintains them. A centralized orchestrator is preferred over N independent expert update jobs.
+
+- One orchestrator process runs on a secondary machine (not the user's primary dev laptop). Suitable machines: a DGX Spark (if GPU-backed verification is needed), a desktop, or a secondary laptop.
+- The orchestrator cycles through experts by priority, using each expert's SOURCES.md to determine what to check and how often.
+- For each expert: fetch fresh content from sources, diff against current reference docs, rewrite what's changed, update "as of" dates.
+- Produces git commits on a branch. The user pulls updates when ready — no disruption to active work.
+- The orchestrator is a Pathfinder feature, not an expert feature. Individual experts never schedule their own updates. This keeps the boundary clean and avoids resource contention from multiple independent cron jobs.
+- Open question: should the orchestrator also manage Claude Code memory files, or only Pathfinder-managed artifacts? Current recommendation: only Pathfinder artifacts. Memory files are personal and conversation-driven — they don't belong in a batch refresh cycle.
+
 ## Key Design Decisions
 
 ### The persona is the product, not the knowledge base
@@ -182,6 +193,14 @@ Expert archetypes are design accelerators, not rigid categories. Identifying the
         {hash}.md                 <- parsed + cleaned source content
         {hash}.meta.json          <- source metadata (URL, title, date, type)
 ```
+
+**Dual knowledge layers (Claude Code deployment):** When experts are deployed as Claude Code projects, the host environment adds a second knowledge system: `~/.claude/projects/.../memory/`. This is Claude Code's built-in memory — ad hoc, conversation-driven, per-user. It stores user preferences, project context, and corrections that emerge during conversations.
+
+These two systems are complementary but disconnected:
+- **Pathfinder artifacts** (ORIENTATION.md, reference/, RETRIEVAL.md): domain knowledge, shared, version-controlled, refreshed by the orchestrator
+- **Claude Code memory** (~/.claude/projects/.../memory/): user context, personal, not version-controlled, updated during conversations
+
+The boundary: domain facts belong in Pathfinder artifacts. User context belongs in memory. If something learned via memory is actually domain knowledge (e.g., "the API changed in v3.2"), it should be promoted to a reference doc via Pathfinder. The orchestrator manages Pathfinder artifacts only — it does not read or write Claude Code memory files.
 
 ## Embedding and Retrieval
 

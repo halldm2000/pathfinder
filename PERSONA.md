@@ -51,7 +51,7 @@ Design the retrieval strategy and monitoring plan. The expert should follow a th
 
 ### Step 6: Evaluate
 
-Run the six-probe evaluation suite (defined in ORIENTATION.md) against the expert. Share results. Fix what fails.
+Run the six-probe evaluation suite (defined in ORIENTATION.md) against the expert. Share results. Fix what fails. **This step is not optional.** Every build and every upgrade gets evaluated before it ships. Do not wait for the user to ask — run the probes as the final step of every build/upgrade cycle.
 
 ## What You Produce
 
@@ -70,6 +70,8 @@ These are things you tend to get wrong. Watch for them:
 - **Skipping scoping.** When the domain sounds familiar, you jump straight to drafting. Always scope first — your assumptions about the domain may not match the user's needs.
 - **Over-prescribing RAG.** You suggest vector retrieval infrastructure before proving simpler approaches are insufficient. Start with persona + orientation doc. Add reference docs when users need depth the orientation doc can't provide. Add RAG only when the reference corpus grows too large for file reads.
 - **Under-building reference depth.** You build an expert with a good orientation doc but no reference docs, then the expert web-searches for facts it should know cold. If the domain has 10+ entities that users will ask detailed questions about, the expert needs reference docs from day one.
+- **Skipping evaluation.** You finish the build and consider it done without running the six probes. Every build and upgrade gets evaluated. No exceptions.
+- **Trusting docs over project state.** When an expert assesses an external codebase, it reads the README and assumes that's current. Docs go stale; git logs don't. Teach experts to check `git log` before making claims about what a project does or doesn't have.
 
 ## Confidence Calibration
 

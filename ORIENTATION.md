@@ -88,11 +88,11 @@ with explicit caveats. You are not an expert in [Z] — redirect these.
 
 ## Response Templates for Pathfinder Outputs
 
-**Persona draft** should always contain these sections, in order: (1) Identity and scope (with scope triplet), (2) Reasoning style (structural, not aspirational), (3) Failure modes (with corrections), (4) Confidence calibration (three tiers), (5) Response structure (for common task types).
+**Persona draft** should always contain these sections, in order: (1) Identity and scope (with scope triplet), (2) Audience (default level + adaptation guidance — don't hard-code "experts only" if the expert may serve mixed audiences), (3) Reasoning style (structural, not aspirational), (4) Failure modes (with corrections), (5) Confidence calibration (three tiers), (6) Response structure (for common task types).
 
 **Orientation doc draft** should always contain: (1) Field map (3–5 sentences), (2) Entity blocks for key domain concepts (summaries, not exhaustive — reference docs have depth), (3) Dated facts for anything stale-able, (4) Explicit contradictions where sources disagree.
 
-**Reference docs** should contain: (1) One file per major entity, (2) Structured format (what it is, key details, how to use it, relationships, known issues, sources), (3) 500–2,000 tokens each, (4) Prioritized by expected question frequency.
+**Reference docs** should contain: (1) One file per major entity, (2) Structured format (what it is, key details, how to use it, relationships, known issues, sources), (3) 500–2,000 tokens each, (4) Prioritized by expected question frequency, (5) Headline verification scores where applicable — 2–3 key metrics with "as of" dating; if scores aren't yet published, state that explicitly rather than leaving a silent gap.
 
 **Scoping summary** should capture: domain, audience, tasks, boundaries, archetype (primary + secondary), domain velocity, failure cost, existing resources.
 
@@ -111,6 +111,26 @@ Every expert should follow this hierarchy, in order:
 **Tier 4 (optional): RAG / vector search.** For expert corpora that grow beyond what file reads can handle (100+ documents, thousands of chunks). Most experts never need this tier.
 
 The retrieval strategy document (RETRIEVAL.md) should specify which tier handles which question types for the specific domain, and include patterns for how to search at each tier.
+
+## Dual Knowledge Layers (Claude Code Deployment)
+
+When an expert runs as a Claude Code project, it has two independent knowledge systems that don't talk to each other:
+
+**Pathfinder-managed knowledge** (structured, curated, version-controlled):
+- ORIENTATION.md, reference/ docs, RETRIEVAL.md
+- Domain knowledge: model architectures, benchmarks, APIs, competitive landscape
+- Shared — any user of this expert benefits from it
+- Updated by Pathfinder (manually or via future orchestrator)
+
+**Claude Code memory** (`~/.claude/projects/.../memory/`):
+- Ad hoc, conversation-driven, per-user
+- User context: preferences, projects, corrections, working relationships
+- Personal — only visible to the user who created it
+- Updated automatically by Claude Code during conversations
+
+**The boundary:** Memory is for user context. Reference docs are for domain knowledge. If an expert learns something via memory that is actually domain knowledge other users would benefit from (e.g., a model API changed, a new deployment pattern emerged), that knowledge should be promoted to a reference doc via Pathfinder — not left in a personal memory file.
+
+**Why this matters for the orchestrator:** A future orchestrator that refreshes reference docs won't see or touch Claude Code memories. Conversely, Claude Code memory won't be aware of orchestrator-driven reference doc updates. The two systems are complementary but disconnected. Design accordingly: don't put domain facts in memory, don't put user preferences in reference docs.
 
 ## Reference Document Patterns
 
@@ -137,6 +157,8 @@ The retrieval strategy document (RETRIEVAL.md) should specify which tier handles
 
 **Known issues / limitations:** [What to watch out for]
 
+**Headline verification scores:** [2–3 key metrics, e.g., "CRPS improvement over X at Y-day lead time." If no published scores yet, state that explicitly: "No published benchmark scorecard as of [date]. Under evaluation at [where]."]
+
 **Sources:** [Paper URLs, docs, repos]
 
 As of: [date of last verification]
@@ -151,6 +173,7 @@ As of: [date of last verification]
 | "What's the latest version of X?" | Web search | Version numbers change between releases |
 | "Show me code to do X" | Reference doc | Working code examples with imports and data loading |
 | "How does X compare to Y?" | Orientation doc (structure) + reference docs (detail) | Orientation doc has the comparison framework; reference docs have the specifics |
+| "How good is X?" (metrics) | Reference doc | Headline verification scores with "as of" dating; web search only for leaderboard positions |
 | "Has anyone published on X this month?" | Web search | Recent publications require live search |
 
 **The orientation doc indexes the reference docs.** Entity blocks in the orientation doc should be summaries, not exhaustive. The reference doc has the depth. The orientation doc's job is to give the expert enough context to know which reference doc to read.
@@ -191,6 +214,8 @@ As of: [date of last verification]
 6. **Over-engineering v0.** Building RAG before persona and orientation are proven. Start with two files.
 7. **Web search as knowledge.** Expert web-searches for facts it should know cold. If users regularly wait 30–60 seconds for answers about core entities, the expert needs reference docs. Web search is for freshness, not for depth.
 8. **Orientation-only expert.** Orientation doc covers the top 50 facts but users ask detailed questions about the top 10 entities. Without reference docs, every "how does X work?" question triggers a web search. An expert that knows about everything but knows nothing deeply is a librarian, not a colleague.
+9. **Trusting docs over project state.** When assessing a codebase, the expert reads the README and assumes it's current. Documentation goes stale; git history doesn't. Any expert that interacts with codebases should check `git log` for recent changes before making claims about what exists or doesn't.
+10. **Skipping evaluation.** The expert is built and considered done without running the six probes. Every build and upgrade gets the full evaluation suite. If you skip it, you ship untested work.
 
 ## Evaluation: The Six Probes
 
