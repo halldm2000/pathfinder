@@ -25,6 +25,11 @@ Last updated: 2026-03-30.
 | **earth2** | AI weather/climate models, Earth-2 platform, atmospheric science | `experts/earth2/` |
 | **hurricane** | Tropical cyclone science, HENS, AI hurricane prediction, NHC/JTWC operations | `experts/hurricane/` |
 | **space-weather** | Solar physics, HelioFM/Surya, space weather forecasting, technology impacts | `experts/space-weather/` |
+| **ocean** | Physical oceanography, ENSO, sea ice, ocean observations, S2S prediction | `experts/ocean/` |
+| **coastal-flooding** | Storm surge, sea level rise, compound flooding, inundation modeling | `experts/coastal-flooding/` |
+| **wildfire** | Fire detection, spread models, smoke/air quality, fire weather | `experts/wildfire/` |
+| **nvidia-products** | NVIDIA AI platform: NIMs, NeMo, Omniverse, Cosmos, GPUs, inference | `experts/nvidia-products/` |
+| **data-formats** | GRIB, NetCDF, Zarr, HDF5, BUFR, GeoTIFF, xarray, format conversion | `experts/data-formats/` |
 | **webapp-designer** | UI/UX design, scientific viz, frontend dev, browser QA | `experts/webapp-designer/` |
 | **pathfinder** | Expert-builder meta-expert, persona/orientation/evaluation design | `experts/pathfinder/` |
 

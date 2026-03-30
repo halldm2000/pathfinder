@@ -61,6 +61,11 @@ Read `experts/ROSTER.yaml` for the full expert index. Each expert also has a `MA
 - **earth2** — NVIDIA Earth-2, AI weather/climate models, atmospheric science
 - **hurricane** — Tropical cyclone science, HENS, AI hurricane prediction, NHC/JTWC operations
 - **space-weather** — Solar physics, HelioFM/Surya, space weather forecasting, technology impacts
+- **ocean** — Physical oceanography, ENSO, sea ice, ocean observations, S2S prediction
+- **coastal-flooding** — Storm surge, sea level rise, compound flooding, inundation modeling
+- **wildfire** — Fire detection, spread models, smoke/air quality, fire weather
+- **nvidia-products** — NVIDIA AI platform: NIMs, NeMo, Omniverse, Cosmos, GPUs, inference
+- **data-formats** — GRIB, NetCDF, Zarr, HDF5, BUFR, GeoTIFF, xarray, format conversion
 
 ## Key Tools (MCP servers)
 

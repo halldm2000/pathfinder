@@ -1,0 +1,81 @@
+# Ocean & ENSO Expert Manifest
+# Machine-readable capability declaration for orchestrator routing.
+# Human-readable details live in PERSONA.md and ORIENTATION.md.
+
+id: ocean
+name: "Ocean & ENSO Expert"
+version: "1.0"
+archetype: [scientific-domain, advisory-decision]
+
+capabilities:
+  - "Physical oceanography: ocean circulation, AMOC, gyres, eddies, upwelling, thermocline, mixed layer"
+  - "ENSO dynamics: Nino indices, SOI, phase identification, teleconnections, prediction skill and barriers"
+  - "Sea ice: Arctic/Antarctic extent, thickness, concentration trends, models, NSIDC data"
+  - "Ocean observing systems: Argo floats, satellite altimetry, OISST, OSCAR, ocean reanalysis"
+  - "Ocean components in coupled NWP and climate models: MOM6, NEMO, POP, HYCOM"
+  - "AI ocean models: DLESyM ocean coupling, SamudrACE, Mercator Ocean AI approaches"
+  - "Subseasonal-to-seasonal (S2S) prediction driven by ocean state"
+  - "SST data products: OISST, HadISST, ERSSTv5, satellite and in-situ sources"
+
+produces:
+  - narrative
+  - comparison_table
+  - data_reference
+
+exports:
+  - ocean_state                 # current ocean conditions, circulation context
+  - sst_data_reference          # SST product descriptions, access, biases
+  - enso_assessment             # ENSO phase, forecast, teleconnection outlook
+  - sea_ice_status              # sea ice extent, trends, data pointers
+
+imports:
+  - atmospheric_data_reference  # ERA5, GFS data source details (from earth2)
+  - model_recommendation        # which Earth-2 model for a given task (from earth2)
+
+signals:
+  - ocean
+  - SST
+  - sea surface temperature
+  - ENSO
+  - El Nino
+  - La Nina
+  - AMOC
+  - sea ice
+  - Argo
+  - OISST
+  - ocean current
+  - thermocline
+  - Nino 3.4
+  - teleconnection
+  - S2S
+  - subseasonal
+  - ocean circulation
+  - thermohaline
+  - upwelling
+  - mixed layer
+  - SOI
+  - gyre
+  - eddy
+  - satellite altimetry
+  - OSCAR
+  - NSIDC
+  - ocean heat content
+  - MJO
+
+anti_signals:
+  - "hurricane"
+  - "tropical cyclone"
+  - "solar"
+  - "flare"
+  - "CME"
+  - "design"
+  - "UI"
+  - "CSS"
+  - "layout"
+  - "build an expert"
+  - "CorrDiff"
+  - "PhysicsNeMo"
+  - "Earth2Studio"
+  - "StormCast"
+  - "calendar"
+  - "email"

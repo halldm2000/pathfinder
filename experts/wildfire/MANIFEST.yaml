@@ -1,0 +1,85 @@
+# Wildfire Expert Manifest
+# Machine-readable capability declaration for orchestrator routing.
+# Human-readable details live in PERSONA.md and ORIENTATION.md.
+
+id: wildfire
+name: "Wildfire Expert"
+version: "1.0"
+archetype: [scientific-domain, advisory-decision]
+
+capabilities:
+  - "Wildfire science: fire behavior, spread mechanisms, combustion, crown fire, spotting, fuel moisture dynamics"
+  - "Fire detection systems: FIRMS/VIIRS satellite hotspots, GOES geostationary fire monitoring, ALERTWildfire cameras"
+  - "Fire spread models: FARSITE, FlamMap, WRF-SFIRE, Phoenix, Rothermel equations, FSPro probabilistic mapping"
+  - "Smoke and air quality: HRRR-Smoke, BlueSky framework, PM2.5 forecasting, AQI interpretation"
+  - "Fire weather: FWI System, NFDRS, Red Flag warnings, Haines Index, fire weather forecasting"
+  - "Fuel moisture: live/dead fuel moisture content, timelag classes, LFMC remote sensing"
+  - "Historical fire data and trends: MTBS, NIFC statistics, fire-climate interactions, fire season lengthening"
+  - "AI/ML in wildfire: satellite-based ML detection, data-driven spread prediction, smoke forecast post-processing"
+
+produces:
+  - narrative
+  - comparison_table
+  - data_reference
+
+exports:
+  - fire_detection_data       # FIRMS/VIIRS/GOES hotspot data interpretation and access
+  - fire_spread_forecast      # Fire behavior and spread model guidance
+  - smoke_forecast            # Smoke transport, PM2.5 forecasting, AQI context
+  - fire_weather_assessment   # FWI, Red Flag, fire danger rating interpretation
+
+imports:
+  - atmospheric_data_reference  # Wind, humidity, temperature from weather models (from earth2)
+
+signals:
+  - wildfire
+  - fire
+  - FIRMS
+  - VIIRS
+  - fire spread
+  - fuel moisture
+  - prescribed burn
+  - prescribed fire
+  - smoke
+  - PM2.5
+  - FWI
+  - "Red Flag"
+  - FARSITE
+  - FlamMap
+  - fire weather
+  - fire detection
+  - fire behavior
+  - WUI
+  - "wildland-urban interface"
+  - WRF-SFIRE
+  - Rothermel
+  - NFDRS
+  - "fire danger"
+  - AQI
+  - "air quality"
+  - "burn severity"
+  - MTBS
+  - "fire season"
+  - "HRRR-Smoke"
+  - BlueSky
+  - "fire radiative power"
+  - ALERTWildfire
+  - "crown fire"
+  - LFMC
+
+anti_signals:
+  - hurricane
+  - "tropical cyclone"
+  - ocean
+  - solar
+  - "space weather"
+  - design
+  - UI
+  - CSS
+  - "build an expert"
+  - CorrDiff
+  - "structural fire"
+  - "urban fire"
+  - "building fire"
+  - PhysicsNeMo
+  - Earth2Studio

@@ -1,0 +1,78 @@
+# NVIDIA AI Products Expert Manifest
+# Machine-readable capability declaration for orchestrator routing.
+# Human-readable details live in PERSONA.md and ORIENTATION.md.
+
+id: nvidia-products
+name: "NVIDIA AI Products Expert"
+version: "1.0"
+archetype: [tool-platform, technical-reference]
+
+capabilities:
+  - "NVIDIA AI platform overview: silicon to cloud API stack"
+  - "NIM microservices: architecture, deployment, catalog, API patterns"
+  - "NeMo framework: LLM training, fine-tuning, RLHF, guardrails"
+  - "PhysicsNeMo: physics-ML framework, Modulus migration, Earth-2 training"
+  - "Omniverse and Cosmos: digital twins, USD, world foundation models"
+  - "GPU architectures: Hopper, Blackwell, DGX/HGX systems, interconnects"
+  - "Inference stack: TensorRT, Triton, optimization, deployment"
+  - "RAPIDS, NGC catalog, NVIDIA AI Enterprise licensing"
+
+produces:
+  - narrative
+  - comparison_table
+  - code_snippet
+  - data_reference
+  - deployment_guide
+
+exports:
+  - product_recommendation       # which NVIDIA product for a given use case
+  - api_reference                # NIM API patterns, deployment configurations
+  - deployment_guidance          # hardware requirements, licensing, infrastructure
+  - gpu_selection                # GPU architecture comparison and selection advice
+
+imports:
+  - model_architecture_summary   # from earth2 -- Earth-2 model internals
+
+signals:
+  - NVIDIA
+  - NIM
+  - NeMo
+  - PhysicsNeMo
+  - Omniverse
+  - Cosmos
+  - TensorRT
+  - Triton
+  - DGX
+  - GPU
+  - H100
+  - H200
+  - B200
+  - GB200
+  - Blackwell
+  - Hopper
+  - Grace Hopper
+  - CUDA
+  - NGC
+  - RAPIDS
+  - cuDF
+  - cuML
+  - inference optimization
+  - multi-GPU
+  - NVLink
+  - AI Enterprise
+  - Nemotron
+  - TensorRT-LLM
+
+anti_signals:
+  - "specific weather model architectures"
+  - "hurricane"
+  - "tropical cyclone"
+  - "solar"
+  - "space weather"
+  - "design"
+  - "UI"
+  - "layout"
+  - "CSS"
+  - "build an expert"
+  - "calendar"
+  - "email"

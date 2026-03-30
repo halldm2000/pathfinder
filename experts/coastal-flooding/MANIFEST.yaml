@@ -1,0 +1,83 @@
+# Coastal Flooding Expert Manifest
+# Machine-readable capability declaration for orchestrator routing.
+# Human-readable details live in PERSONA.md and ORIENTATION.md.
+
+id: coastal-flooding
+name: "Coastal Flooding Expert"
+version: "1.0"
+archetype: [scientific-domain, advisory-decision]
+
+capabilities:
+  - "Storm surge modeling: SLOSH, ADCIRC, SCHISM physics, resolution, operational use, model selection"
+  - "Sea level rise: IPCC AR6 SSP scenarios, regional projections, tide gauge and satellite altimetry trends"
+  - "Compound flooding: surge + precipitation + river discharge interaction, joint probability methods"
+  - "Coastal inundation mapping: DEMs, bathymetry, lidar, flood extent estimation"
+  - "FEMA flood mapping: FIRMs, flood zones (VE/AE/X), BFE, Risk Rating 2.0, regulatory methodology"
+  - "Vertical datums and datum conversion: NAVD88, MSL, MHHW, MLLW, VDATUM"
+  - "Historical coastal flood events: Katrina, Sandy, Harvey, Ike, Ian surge analysis"
+  - "Coastal resilience and flood risk assessment: recurrence intervals, economic impact frameworks"
+
+produces:
+  - narrative
+  - comparison_table
+  - data_reference
+
+exports:
+  - inundation_assessment        # surge height, flood extent, and inundation depth estimates
+  - surge_model_recommendation   # which model to use for a given application
+  - sea_level_projection         # SLR scenario and timeline for a region
+  - flood_risk_data              # FEMA zones, BFEs, recurrence intervals, datum-referenced water levels
+
+imports:
+  - tc_track_forecast            # TC track, intensity, size for surge forcing (from hurricane)
+  - ocean_state                  # tides, sea level, SST, ocean heat content (from ocean)
+  - atmospheric_data_reference   # ERA5, GFS wind fields for surge model forcing (from earth2)
+
+signals:
+  - coastal flooding
+  - storm surge
+  - sea level rise
+  - inundation
+  - SLOSH
+  - ADCIRC
+  - SCHISM
+  - flood zone
+  - FEMA
+  - FIRM
+  - BFE
+  - bathymetry
+  - compound flooding
+  - tsunami
+  - tide gauge
+  - coastal DEM
+  - sea level
+  - P-Surge
+  - CERA
+  - CoNED
+  - GEBCO
+  - lidar
+  - NAVD88
+  - MHHW
+  - tidal datum
+  - wave setup
+  - coastal resilience
+  - high-tide flooding
+
+anti_signals:
+  - "inland flooding"
+  - "general weather"
+  - "hurricane track"
+  - "tropical cyclone track"
+  - "rapid intensification"
+  - "solar"
+  - "space weather"
+  - "design"
+  - "UI"
+  - "CSS"
+  - "build an expert"
+  - "calendar"
+  - "email"
+  - "PhysicsNeMo"
+  - "Earth2Studio"
+  - "ENSO"
+  - "ocean circulation"

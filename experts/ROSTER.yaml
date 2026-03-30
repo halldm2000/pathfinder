@@ -3,7 +3,7 @@
 # The orchestrator reads this file for routing instead of scanning N directories.
 
 generated: 2026-03-30
-expert_count: 5
+expert_count: 10
 
 experts:
   earth2:
@@ -65,6 +65,80 @@ experts:
       - "Carrington-class extreme event assessment and risk analysis"
     signals: [solar, space weather, flare, CME, coronal, geomagnetic, Kp, "Kp index", Dst, aurora, SDO, HelioFM, Surya, sunspot, solar wind, magnetosphere, radiation belt, Carrington, SWPC, solar cycle, proton flux, solar storm, geomagnetic storm, coronal hole, solar energetic particles, GIC, ionospheric scintillation]
     anti_signals: ["terrestrial weather", "hurricane", "CorrDiff", "Atlas", "StormScope", "ERA5", "GFS", "NWP", "design", "UI", "CSS", "layout", "build an expert", "calendar", "email"]
+
+  data-formats:
+    name: "Data Formats Expert"
+    archetype: [technical-reference]
+    capabilities:
+      - "Geoscience data formats: GRIB2, NetCDF4, Zarr, HDF5, BUFR, GeoTIFF/COG, Arrow/Parquet"
+      - "Format reading, writing, and conversion with Python (eccodes, cfgrib, netCDF4, h5py, zarr, rasterio, xarray)"
+      - "Chunking strategy design for Zarr and NetCDF4 based on access patterns"
+      - "Compression codec selection: zlib, zstd, lz4, blosc, bitshuffle for weather/climate data"
+      - "Cloud-native data access: kerchunk, VirtualiZarr, fsspec, s3fs for legacy archive virtualization"
+      - "CF Conventions compliance, metadata standards, and format interoperability"
+      - "xarray as unifying multi-format interface with Dask lazy loading"
+    signals: [GRIB, GRIB2, NetCDF, netcdf4, Zarr, HDF5, h5py, BUFR, GeoTIFF, COG, eccodes, cfgrib, xarray, kerchunk, VirtualiZarr, CF conventions, chunking, compression, data format, data conversion, rasterio, GDAL, Parquet, GeoParquet, fsspec, rechunker, numcodecs, blosc, zstd]
+    anti_signals: ["hurricane", "tropical cyclone", "ocean", "solar", "space weather", "design", "UI", "layout", "CSS", "build an expert", "model architecture", "what is a hurricane", "what is a flare", "inference pipeline", "model training", "fine-tuning"]
+
+  wildfire:
+    name: "Wildfire Expert"
+    archetype: [scientific-domain, advisory-decision]
+    capabilities:
+      - "Wildfire science: fire behavior, spread mechanisms, combustion, crown fire, spotting, fuel moisture dynamics"
+      - "Fire detection systems: FIRMS/VIIRS satellite hotspots, GOES geostationary fire monitoring, ALERTWildfire cameras"
+      - "Fire spread models: FARSITE, FlamMap, WRF-SFIRE, Phoenix, Rothermel equations, FSPro probabilistic mapping"
+      - "Smoke and air quality: HRRR-Smoke, BlueSky framework, PM2.5 forecasting, AQI interpretation"
+      - "Fire weather: FWI System, NFDRS, Red Flag warnings, Haines Index, fire weather forecasting"
+      - "Fuel moisture: live/dead fuel moisture content, timelag classes, LFMC remote sensing"
+      - "Historical fire data and trends: MTBS, NIFC statistics, fire-climate interactions, fire season lengthening"
+      - "AI/ML in wildfire: satellite-based ML detection, data-driven spread prediction, smoke forecast post-processing"
+    signals: [wildfire, fire, FIRMS, VIIRS, fire spread, fuel moisture, prescribed burn, prescribed fire, smoke, PM2.5, FWI, "Red Flag", FARSITE, FlamMap, fire weather, fire detection, fire behavior, WUI, "wildland-urban interface", WRF-SFIRE, Rothermel, NFDRS, "fire danger", AQI, "air quality", "burn severity", MTBS, "fire season", "HRRR-Smoke", BlueSky, "fire radiative power", ALERTWildfire, "crown fire", LFMC]
+    anti_signals: ["hurricane", "tropical cyclone", "ocean", "solar", "space weather", "design", "UI", "CSS", "build an expert", "CorrDiff", "structural fire", "urban fire", "building fire", "PhysicsNeMo", "Earth2Studio"]
+
+  nvidia-products:
+    name: "NVIDIA AI Products Expert"
+    archetype: [tool-platform, technical-reference]
+    capabilities:
+      - "NVIDIA AI platform overview: silicon to cloud API stack"
+      - "NIM microservices: architecture, deployment, catalog, API patterns"
+      - "NeMo framework: LLM training, fine-tuning, RLHF, guardrails"
+      - "PhysicsNeMo: physics-ML framework, Modulus migration, Earth-2 training"
+      - "Omniverse and Cosmos: digital twins, USD, world foundation models"
+      - "GPU architectures: Hopper, Blackwell, DGX/HGX systems, interconnects"
+      - "Inference stack: TensorRT, Triton, optimization, deployment"
+      - "RAPIDS, NGC catalog, NVIDIA AI Enterprise licensing"
+    signals: [NVIDIA, NIM, NeMo, PhysicsNeMo, Omniverse, Cosmos, TensorRT, Triton, DGX, GPU, H100, H200, B200, GB200, Blackwell, Hopper, "Grace Hopper", CUDA, NGC, RAPIDS, cuDF, cuML, "inference optimization", multi-GPU, NVLink, "AI Enterprise", Nemotron, TensorRT-LLM]
+    anti_signals: ["specific weather model architectures", "hurricane", "tropical cyclone", "solar", "space weather", "design", "UI", "layout", "CSS", "build an expert", "calendar", "email"]
+
+  ocean:
+    name: "Ocean & ENSO Expert"
+    archetype: [scientific-domain, advisory-decision]
+    capabilities:
+      - "Physical oceanography: ocean circulation, AMOC, gyres, eddies, upwelling, thermocline, mixed layer"
+      - "ENSO dynamics: Nino indices, SOI, phase identification, teleconnections, prediction skill and barriers"
+      - "Sea ice: Arctic/Antarctic extent, thickness, concentration trends, models, NSIDC data"
+      - "Ocean observing systems: Argo floats, satellite altimetry, OISST, OSCAR, ocean reanalysis"
+      - "Ocean components in coupled NWP and climate models: MOM6, NEMO, POP, HYCOM"
+      - "AI ocean models: DLESyM ocean coupling, SamudrACE, Mercator Ocean AI approaches"
+      - "Subseasonal-to-seasonal (S2S) prediction driven by ocean state"
+      - "SST data products: OISST, HadISST, ERSSTv5, satellite and in-situ sources"
+    signals: [ocean, SST, sea surface temperature, ENSO, El Nino, La Nina, AMOC, sea ice, Argo, OISST, ocean current, thermocline, Nino 3.4, teleconnection, S2S, subseasonal, ocean circulation, thermohaline, upwelling, mixed layer, SOI, gyre, eddy, satellite altimetry, OSCAR, NSIDC, ocean heat content, MJO]
+    anti_signals: ["hurricane", "tropical cyclone", "solar", "flare", "CME", "design", "UI", "CSS", "layout", "build an expert", "CorrDiff", "PhysicsNeMo", "Earth2Studio", "StormCast", "calendar", "email"]
+
+  coastal-flooding:
+    name: "Coastal Flooding Expert"
+    archetype: [scientific-domain, advisory-decision]
+    capabilities:
+      - "Storm surge modeling: SLOSH, ADCIRC, SCHISM physics, resolution, operational use, model selection"
+      - "Sea level rise: IPCC AR6 SSP scenarios, regional projections, tide gauge and satellite altimetry trends"
+      - "Compound flooding: surge + precipitation + river discharge interaction, joint probability methods"
+      - "Coastal inundation mapping: DEMs, bathymetry, lidar, flood extent estimation"
+      - "FEMA flood mapping: FIRMs, flood zones (VE/AE/X), BFE, Risk Rating 2.0, regulatory methodology"
+      - "Vertical datums and datum conversion: NAVD88, MSL, MHHW, MLLW, VDATUM"
+      - "Historical coastal flood events: Katrina, Sandy, Harvey, Ike, Ian surge analysis"
+      - "Coastal resilience and flood risk assessment: recurrence intervals, economic impact frameworks"
+    signals: [coastal flooding, storm surge, sea level rise, inundation, SLOSH, ADCIRC, SCHISM, flood zone, FEMA, FIRM, BFE, bathymetry, compound flooding, tsunami, tide gauge, coastal DEM, sea level, P-Surge, CERA, CoNED, GEBCO, lidar, NAVD88, MHHW, tidal datum, wave setup, coastal resilience, high-tide flooding]
+    anti_signals: ["inland flooding", "general weather", "hurricane track", "tropical cyclone track", "rapid intensification", "solar", "space weather", "design", "UI", "CSS", "build an expert", "calendar", "email", "PhysicsNeMo", "Earth2Studio", "ENSO", "ocean circulation"]
 
   pathfinder:
     name: "Pathfinder (Expert Builder)"

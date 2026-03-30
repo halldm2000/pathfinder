@@ -1,0 +1,81 @@
+# Data Formats Expert Manifest
+# Machine-readable capability declaration for orchestrator routing.
+# Human-readable details live in PERSONA.md and ORIENTATION.md.
+
+id: data-formats
+name: "Data Formats Expert"
+version: "1.0"
+archetype: [technical-reference]
+
+capabilities:
+  - "Geoscience data formats: GRIB2, NetCDF4, Zarr, HDF5, BUFR, GeoTIFF/COG, Arrow/Parquet"
+  - "Format reading, writing, and conversion with Python (eccodes, cfgrib, netCDF4, h5py, zarr, rasterio, xarray)"
+  - "Chunking strategy design for Zarr and NetCDF4 based on access patterns"
+  - "Compression codec selection: zlib, zstd, lz4, blosc, bitshuffle for weather/climate data"
+  - "Cloud-native data access: kerchunk, VirtualiZarr, fsspec, s3fs for legacy archive virtualization"
+  - "CF Conventions compliance, metadata standards, and format interoperability"
+  - "xarray as unifying multi-format interface with Dask lazy loading"
+
+produces:
+  - code_snippet
+  - data_reference
+  - comparison_table
+  - narrative
+
+exports:
+  - format_conversion_code       # complete read-transform-write pipelines between formats
+  - data_reading_code            # working Python code to read any geoscience format
+  - chunking_recommendation      # chunk shape and size for specific data/access patterns
+  - compression_recommendation   # codec, level, and filter chain for specific data types
+
+imports:
+  - atmospheric_data_reference   # from earth2 -- which formats specific datasets use (ERA5, GFS, etc.)
+
+signals:
+  - GRIB
+  - GRIB2
+  - NetCDF
+  - netcdf4
+  - Zarr
+  - HDF5
+  - h5py
+  - BUFR
+  - GeoTIFF
+  - COG
+  - eccodes
+  - cfgrib
+  - xarray
+  - kerchunk
+  - VirtualiZarr
+  - CF conventions
+  - chunking
+  - compression
+  - data format
+  - data conversion
+  - rasterio
+  - GDAL
+  - Parquet
+  - GeoParquet
+  - fsspec
+  - rechunker
+  - numcodecs
+  - blosc
+  - zstd
+
+anti_signals:
+  - "hurricane"
+  - "tropical cyclone"
+  - "ocean"
+  - "solar"
+  - "space weather"
+  - "design"
+  - "UI"
+  - "layout"
+  - "CSS"
+  - "build an expert"
+  - "model architecture"
+  - "what is a hurricane"
+  - "what is a flare"
+  - "inference pipeline"
+  - "model training"
+  - "fine-tuning"
