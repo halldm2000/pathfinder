@@ -1,0 +1,78 @@
+# Space Weather Expert Manifest
+# Machine-readable capability declaration for orchestrator routing.
+# Human-readable details live in PERSONA.md and ORIENTATION.md.
+
+id: space-weather
+name: "Space Weather Expert"
+version: "1.0"
+archetype: [scientific-domain, advisory-decision]
+
+capabilities:
+  - "Solar physics: flares, CMEs, solar wind, coronal holes, sunspots, solar cycle"
+  - "Space weather forecasting: Kp index, Dst, proton flux, NOAA G/S/R scales"
+  - "HelioFM/Surya: NASA-NVIDIA-IBM solar foundation model, architecture, capabilities"
+  - "SDO, SOHO, ACE, DSCOVR, GOES observational systems and data products"
+  - "Technology impacts: satellites, GPS, power grids, aviation, communications"
+  - "Aurora forecasting and magnetosphere dynamics"
+  - "AI/ML approaches to solar flare prediction and CME arrival time estimation"
+  - "Carrington-class extreme event assessment and risk analysis"
+
+produces:
+  - narrative
+  - comparison_table
+  - data_reference
+
+exports:
+  - solar_activity_assessment     # current solar conditions and forecast
+  - geomagnetic_forecast          # Kp/Dst prediction and G-scale assessment
+  - heliofm_guidance              # Surya/HelioFM architecture and usage
+  - cme_arrival_estimate          # CME transit time and impact timing
+
+imports:
+  - atmospheric_data_reference    # from earth2 -- ionospheric/thermospheric coupling context
+
+signals:
+  - solar
+  - space weather
+  - flare
+  - CME
+  - coronal
+  - geomagnetic
+  - Kp
+  - Kp index
+  - Dst
+  - aurora
+  - SDO
+  - HelioFM
+  - Surya
+  - sunspot
+  - solar wind
+  - magnetosphere
+  - radiation belt
+  - Carrington
+  - SWPC
+  - solar cycle
+  - proton flux
+  - solar storm
+  - geomagnetic storm
+  - coronal hole
+  - solar energetic particles
+  - GIC
+  - ionospheric scintillation
+
+anti_signals:
+  - "terrestrial weather"
+  - "hurricane"
+  - "CorrDiff"
+  - "Atlas"
+  - "StormScope"
+  - "ERA5"
+  - "GFS"
+  - "NWP"
+  - "design"
+  - "UI"
+  - "CSS"
+  - "layout"
+  - "build an expert"
+  - "calendar"
+  - "email"

@@ -23,6 +23,8 @@ Last updated: 2026-03-30.
 | Expert | Domain | Location |
 |--------|--------|----------|
 | **earth2** | AI weather/climate models, Earth-2 platform, atmospheric science | `experts/earth2/` |
+| **hurricane** | Tropical cyclone science, HENS, AI hurricane prediction, NHC/JTWC operations | `experts/hurricane/` |
+| **space-weather** | Solar physics, HelioFM/Surya, space weather forecasting, technology impacts | `experts/space-weather/` |
 | **webapp-designer** | UI/UX design, scientific viz, frontend dev, browser QA | `experts/webapp-designer/` |
 | **pathfinder** | Expert-builder meta-expert, persona/orientation/evaluation design | `experts/pathfinder/` |
 
@@ -90,7 +92,14 @@ These illustrate routing judgment calls. State your interpretation before acting
 | "I need to prepare for GTC" | Compose | Earth-2 + Canva + filesystem |
 | "How would I visualize CorrDiff output in a web dashboard?" | Fan-out | Earth-2 (what CorrDiff produces) + webapp-designer (how to render it) |
 | "Add a 3D particle viz to my dashboard" | Fan-out | Webapp-designer (Three.js/design) + Earth-2 (if weather data) |
-| "Tell me about the hurricane" | Ambiguous | "Science or visualization? Routing to Worldscope. If you meant atmospheric science, let me know." |
+| "How does HENS predict hurricane tracks?" | Consult | Hurricane expert orientation + `reference/hens.md` |
+| "How well do AI models handle rapid intensification?" | Fan-out | Hurricane (RI science + AI limitations) + Earth-2 (Atlas/model architecture) |
+| "Compare HAFS and HENS for TC forecasting" | Consult | Hurricane expert `reference/hens.md` + `reference/operational-forecasting.md` |
+| "What is HelioFM?" | Consult | Space-weather orientation doc, answer directly |
+| "How does a CME affect GPS?" | Consult | Space-weather orientation + `reference/impacts.md` |
+| "What are the SDO AIA channels?" | Consult | Space-weather `reference/observational-systems.md` |
+| "How do geomagnetic storms affect weather models?" | Fan-out | Space-weather (geomagnetic effects) + Earth-2 (ionospheric coupling to models) |
+| "Tell me about the hurricane" | Ambiguous | "Science or visualization? Routing to Hurricane expert for TC science, or Worldscope for live tracking. Which do you need?" |
 | "Write me an inference pipeline for Atlas" | Redirect | Sustained code work → Earth-2 session |
 | "Build me a CFD expert" | Redirect | Pathfinder session |
 | "What's new in AI weather?" | Consult | Check Earth-2 SOURCES.md dates, then search |

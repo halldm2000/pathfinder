@@ -1,0 +1,79 @@
+# Hurricane Expert Manifest
+# Machine-readable capability declaration for orchestrator routing.
+# Human-readable details live in PERSONA.md and ORIENTATION.md.
+
+id: hurricane
+name: "Hurricane Expert"
+version: "1.0"
+archetype: [scientific-domain, advisory-decision]
+
+capabilities:
+  - "Tropical cyclone science: genesis, track dynamics, intensity change, rapid intensification, vortex structure"
+  - "NVIDIA HENS: 7,424-member hurricane ensembles built on Atlas, probabilistic TC prediction"
+  - "AI hurricane models: Atlas, GenCast, Pangu-Weather TC track and intensity evaluation"
+  - "Traditional NWP for TCs: HAFS, HWRF, GFS, ECMWF IFS hurricane performance"
+  - "Operational TC forecasting: NHC/JTWC workflow, consensus models, verification, warning process"
+  - "TC observational systems: hurricane hunters, GOES satellite, dropsondes, SFMR, radar"
+  - "Historical TC databases: IBTrACS, HURDAT2, ATCF format and content"
+  - "Storm surge fundamentals and wind radii impact assessment"
+
+produces:
+  - narrative
+  - comparison_table
+  - data_reference
+
+exports:
+  - tc_track_forecast            # AI and NWP track guidance evaluation
+  - intensity_analysis           # TC intensity prediction context, RI assessment
+  - storm_database_reference     # IBTrACS, HURDAT2, ATCF data pointers
+  - hens_guidance                # HENS ensemble interpretation and skill context
+
+imports:
+  - atmospheric_data_reference   # ERA5, GFS data source details (from earth2)
+  - visualization_command        # Worldscope globe display (from worldscope)
+  - ocean_state                  # SST, ocean heat content (future)
+
+signals:
+  - hurricane
+  - tropical cyclone
+  - typhoon
+  - cyclone
+  - HENS
+  - track forecast
+  - intensity forecast
+  - rapid intensification
+  - NHC
+  - JTWC
+  - eye wall
+  - eyewall replacement
+  - storm surge
+  - Saffir-Simpson
+  - HURDAT
+  - HURDAT2
+  - IBTrACS
+  - ATCF
+  - reconnaissance
+  - hurricane hunter
+  - wind radii
+  - R34
+  - cone of uncertainty
+  - tropical storm
+  - tropical depression
+  - major hurricane
+  - HAFS
+  - HWRF
+  - SHIPS
+  - Dvorak
+
+anti_signals:
+  - "general weather"
+  - "CorrDiff"
+  - "design"
+  - "UI"
+  - "build an expert"
+  - "calendar"
+  - "email"
+  - "PhysicsNeMo"
+  - "Earth2Studio"
+  - "data assimilation"
+  - "climate projection"

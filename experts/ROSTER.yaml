@@ -3,7 +3,7 @@
 # The orchestrator reads this file for routing instead of scanning N directories.
 
 generated: 2026-03-30
-expert_count: 3
+expert_count: 5
 
 experts:
   earth2:
@@ -35,6 +35,36 @@ experts:
       - "Responsive design, dark mode, accessibility"
     signals: [design, UI, UX, layout, CSS, Tailwind, component, responsive, animation, color, dark mode, dashboard, beautiful, Three.js, D3, WebGL, CesiumJS, game, Pixi, Phaser, screenshot, visual QA, framework choice]
     anti_signals: ["what model does X use", "build an expert", "calendar", "email", "deploy to cloud", "AI weather", "inference"]
+
+  hurricane:
+    name: "Hurricane Expert"
+    archetype: [scientific-domain, advisory-decision]
+    capabilities:
+      - "Tropical cyclone science: genesis, track dynamics, intensity change, rapid intensification, vortex structure"
+      - "NVIDIA HENS: 7,424-member hurricane ensembles built on Atlas, probabilistic TC prediction"
+      - "AI hurricane models: Atlas, GenCast, Pangu-Weather TC track and intensity evaluation"
+      - "Traditional NWP for TCs: HAFS, HWRF, GFS, ECMWF IFS hurricane performance"
+      - "Operational TC forecasting: NHC/JTWC workflow, consensus models, verification, warning process"
+      - "TC observational systems: hurricane hunters, GOES satellite, dropsondes, SFMR, radar"
+      - "Historical TC databases: IBTrACS, HURDAT2, ATCF format and content"
+      - "Storm surge fundamentals and wind radii impact assessment"
+    signals: [hurricane, tropical cyclone, typhoon, cyclone, HENS, track forecast, intensity forecast, rapid intensification, NHC, JTWC, eye wall, eyewall replacement, storm surge, Saffir-Simpson, HURDAT, HURDAT2, IBTrACS, ATCF, reconnaissance, hurricane hunter, wind radii, R34, cone of uncertainty, tropical storm, tropical depression, major hurricane, HAFS, HWRF, SHIPS, Dvorak]
+    anti_signals: ["general weather", "CorrDiff", "design", "UI", "build an expert", "calendar", "email", "PhysicsNeMo", "Earth2Studio", "data assimilation", "climate projection"]
+
+  space-weather:
+    name: "Space Weather Expert"
+    archetype: [scientific-domain, advisory-decision]
+    capabilities:
+      - "Solar physics: flares, CMEs, solar wind, coronal holes, sunspots, solar cycle"
+      - "Space weather forecasting: Kp index, Dst, proton flux, NOAA G/S/R scales"
+      - "HelioFM/Surya: NASA-NVIDIA-IBM solar foundation model, architecture, capabilities"
+      - "SDO, SOHO, ACE, DSCOVR, GOES observational systems and data products"
+      - "Technology impacts: satellites, GPS, power grids, aviation, communications"
+      - "Aurora forecasting and magnetosphere dynamics"
+      - "AI/ML approaches to solar flare prediction and CME arrival time estimation"
+      - "Carrington-class extreme event assessment and risk analysis"
+    signals: [solar, space weather, flare, CME, coronal, geomagnetic, Kp, "Kp index", Dst, aurora, SDO, HelioFM, Surya, sunspot, solar wind, magnetosphere, radiation belt, Carrington, SWPC, solar cycle, proton flux, solar storm, geomagnetic storm, coronal hole, solar energetic particles, GIC, ionospheric scintillation]
+    anti_signals: ["terrestrial weather", "hurricane", "CorrDiff", "Atlas", "StormScope", "ERA5", "GFS", "NWP", "design", "UI", "CSS", "layout", "build an expert", "calendar", "email"]
 
   pathfinder:
     name: "Pathfinder (Expert Builder)"
