@@ -102,6 +102,16 @@ with explicit caveats. You are not an expert in [Z] — redirect these.
 
 **Evaluation scorecard** should report: probe name, pass/fail, evidence (what the expert said), recommendation (what to fix).
 
+**MANIFEST.yaml** is a machine-readable capability declaration produced as part of every expert build. It enables the orchestrator to route queries without reading full persona files. See CONVENTIONS.md for the format specification. Key authoring guidance:
+
+- `capabilities` — 3-8 compact descriptors. Specific enough to distinguish this expert from adjacent ones. Think: "What would someone type to find this expert?" These are future embedding targets for vector-based routing.
+- `produces` — what structured output types the expert can generate (narrative, comparison_table, code_snippet, data_reference, plus domain-specific types).
+- `exports` — what this expert can provide to other experts during fan-out. Name these as capabilities another expert might import. Example: earth2 exports `model_recommendation`, `atmospheric_data_reference`.
+- `imports` — what this expert might need from other experts. Match these to exports from other experts. The orchestrator uses imports/exports to detect when fan-out or cross-expert follow-up is beneficial.
+- `signals` / `anti_signals` — routing keywords. Signals trigger routing TO this expert. Anti-signals route AWAY. Be specific: "Atlas" is a better signal than "model".
+
+After building the MANIFEST.yaml, regenerate `experts/ROSTER.yaml` (the consolidated index the orchestrator reads for routing).
+
 ## Three-Tier Retrieval Hierarchy
 
 Every expert should follow this hierarchy, in order:

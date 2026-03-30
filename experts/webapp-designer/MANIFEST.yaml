@@ -1,0 +1,68 @@
+# Webapp Designer Expert Manifest
+# Machine-readable capability declaration for orchestrator routing.
+# Human-readable details live in PERSONA.md and ORIENTATION.md.
+
+id: webapp-designer
+name: "Webapp Designer"
+version: "1.0"
+archetype: [creative-domain, tool-platform]
+
+capabilities:
+  - "UI/UX design: layout, visual hierarchy, color, typography, spacing, animation"
+  - "React/Next.js application development and component architecture"
+  - "Scientific data visualization: D3.js, Three.js, CesiumJS, WebGL"
+  - "Tailwind CSS, component libraries (shadcn/ui, Radix), design systems"
+  - "Game-oriented web technologies: Pixi.js, Phaser"
+  - "Animation and interaction design: Framer Motion, GSAP, microinteractions"
+  - "Visual QA: browser testing, screenshot verification, console debugging"
+  - "Responsive design, dark mode, accessibility"
+
+produces:
+  - narrative
+  - code_snippet
+  - design_critique
+  - stack_recommendation
+
+exports:
+  - design_guidance             # layout, color, typography advice
+  - component_implementation    # React/Svelte component code
+  - framework_recommendation    # which frontend stack for a given project
+  - visualization_architecture  # how to structure a data viz app
+
+imports:
+  - data_reference              # data sources to visualize (from domain experts)
+  - model_architecture_summary  # technical details to inform UI design
+
+signals:
+  - design
+  - UI
+  - UX
+  - layout
+  - CSS
+  - Tailwind
+  - component
+  - responsive
+  - animation
+  - color
+  - dark mode
+  - dashboard
+  - beautiful
+  - Three.js
+  - D3
+  - WebGL
+  - CesiumJS
+  - game
+  - Pixi
+  - Phaser
+  - screenshot
+  - visual QA
+  - framework choice
+
+anti_signals:
+  - "what model does X use"
+  - "build an expert"
+  - "calendar"
+  - "email"
+  - "deploy to cloud"
+  - "AI weather"
+  - "inference"

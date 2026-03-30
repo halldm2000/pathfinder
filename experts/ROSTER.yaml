@@ -1,0 +1,52 @@
+# Expert Roster Index
+# Auto-generated from experts/*/MANIFEST.yaml. Regenerate when manifests change.
+# The orchestrator reads this file for routing instead of scanning N directories.
+
+generated: 2026-03-30
+expert_count: 3
+
+experts:
+  earth2:
+    name: "Earth-2 Expert"
+    archetype: [scientific-domain, tool-platform]
+    capabilities:
+      - "AI weather prediction models and their architectures"
+      - "NVIDIA Earth-2 platform: Atlas, CorrDiff, StormCast, StormScope, HealDA, FCN3, cBottle"
+      - "PhysicsNeMo framework and Earth2Studio Python library"
+      - "Weather model comparison, benchmarks, and verification metrics"
+      - "Atmospheric science fundamentals for machine learning"
+      - "ERA5, GFS, HRRR, GOES data sources and processing pipelines"
+      - "AI weather model inference code and fine-tuning workflows"
+      - "Competing models: GraphCast, GenCast, Pangu-Weather, Aurora, FuXi, AIFS"
+    signals: [Atlas, CorrDiff, FourCastNet, StormCast, StormScope, HealDA, FCN3, cBottle, PhysicsNeMo, Earth2Studio, ERA5, GFS, HRRR, NWP, AI weather, weather model, resolution, inference, ensemble, data assimilation, GraphCast, GenCast, Pangu-Weather]
+    anti_signals: ["show me on globe", "build an expert", "calendar", "email", "design", "UI", "layout", "CSS"]
+
+  webapp-designer:
+    name: "Webapp Designer"
+    archetype: [creative-domain, tool-platform]
+    capabilities:
+      - "UI/UX design: layout, visual hierarchy, color, typography, spacing, animation"
+      - "React/Next.js application development and component architecture"
+      - "Scientific data visualization: D3.js, Three.js, CesiumJS, WebGL"
+      - "Tailwind CSS, component libraries (shadcn/ui, Radix), design systems"
+      - "Game-oriented web technologies: Pixi.js, Phaser"
+      - "Animation and interaction design: Framer Motion, GSAP, microinteractions"
+      - "Visual QA: browser testing, screenshot verification, console debugging"
+      - "Responsive design, dark mode, accessibility"
+    signals: [design, UI, UX, layout, CSS, Tailwind, component, responsive, animation, color, dark mode, dashboard, beautiful, Three.js, D3, WebGL, CesiumJS, game, Pixi, Phaser, screenshot, visual QA, framework choice]
+    anti_signals: ["what model does X use", "build an expert", "calendar", "email", "deploy to cloud", "AI weather", "inference"]
+
+  pathfinder:
+    name: "Pathfinder (Expert Builder)"
+    archetype: [meta-expert]
+    capabilities:
+      - "Designing and building AI domain experts on any topic"
+      - "Persona engineering: scope triplets, failure modes, confidence calibration"
+      - "Orientation document authoring: field maps, entity blocks, token budgets"
+      - "Reference document design: deep-dive entity docs, curation criteria"
+      - "Retrieval strategy: three-tier hierarchy, RAG vs file reads"
+      - "Expert evaluation: six-probe suite (boundary, staleness, calibration, contradiction, depth, comparison)"
+      - "Expert maintenance: SOURCES.md, monitoring plans, freshness protocol"
+      - "Capability manifest authoring: MANIFEST.yaml for orchestrator routing"
+    signals: ["build an expert", "improve the expert", "expert's persona", "new domain", archetype, "orientation doc", "retrieval strategy", evaluation, persona, "expert design", MANIFEST, manifest]
+    anti_signals: ["show me on globe", "calendar", "email", "what model", "design a UI", "write code for"]

@@ -1,0 +1,55 @@
+# Pathfinder Expert Manifest
+# Machine-readable capability declaration for orchestrator routing.
+# Human-readable details live in PERSONA.md and ORIENTATION.md.
+
+id: pathfinder
+name: "Pathfinder (Expert Builder)"
+version: "1.0"
+archetype: [meta-expert]
+
+capabilities:
+  - "Designing and building AI domain experts on any topic"
+  - "Persona engineering: scope triplets, failure modes, confidence calibration"
+  - "Orientation document authoring: field maps, entity blocks, token budgets"
+  - "Reference document design: deep-dive entity docs, curation criteria"
+  - "Retrieval strategy: three-tier hierarchy, RAG vs file reads"
+  - "Expert evaluation: six-probe suite (boundary, staleness, calibration, contradiction, depth, comparison)"
+  - "Expert maintenance: SOURCES.md, monitoring plans, freshness protocol"
+  - "Capability manifest authoring: MANIFEST.yaml for orchestrator routing"
+
+produces:
+  - persona_document
+  - orientation_document
+  - reference_documents
+  - retrieval_strategy
+  - monitoring_plan
+  - evaluation_scorecard
+  - capability_manifest
+
+exports:
+  - expert_design_guidance      # how to structure a new expert
+  - evaluation_results          # six-probe scorecard for any expert
+
+imports: []  # Pathfinder does not depend on other experts
+
+signals:
+  - "build an expert"
+  - "improve the expert"
+  - "expert's persona"
+  - "new domain"
+  - archetype
+  - "orientation doc"
+  - "retrieval strategy"
+  - evaluation
+  - persona
+  - "expert design"
+  - MANIFEST
+  - manifest
+
+anti_signals:
+  - "show me on globe"
+  - "calendar"
+  - "email"
+  - "what model"
+  - "design a UI"
+  - "write code for"

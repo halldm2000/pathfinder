@@ -95,6 +95,37 @@ When the user says "create me an expert on X," Pathfinder runs a guided conversa
 
 This is collaborative. The user's domain knowledge combined with Pathfinder's expert-design knowledge produces better results than either alone.
 
+### v0.5: Multi-Expert Orchestration (file-based)
+
+Extends v0 with multi-expert routing and fan-out consultation. No new code — purely file conventions and orchestrator instructions.
+
+**Capability manifests:**
+- Every expert gets a `MANIFEST.yaml` — machine-readable capability declaration (capabilities, signals, anti-signals, imports/exports, output types). See CONVENTIONS.md for format.
+- `experts/ROSTER.yaml` — consolidated index of all manifests. The orchestrator reads this single file for routing instead of scanning N directories.
+- Pathfinder produces MANIFEST.yaml as part of every expert build.
+
+**Multi-expert fan-out:**
+- The orchestrator gains a fourth invocation mode: Fan-out. When a query spans multiple expert domains, the orchestrator spawns parallel Agent sub-agents, each consulting one expert, and synthesizes results.
+- Structured expert response format (see CONVENTIONS.md) enables merging: confidence, scope match, key claims with sources, gaps, cross-references.
+- The orchestrator uses judgment: fan-out only when it's likely to benefit. Single-domain questions still route to one expert.
+- Synthesis shows which experts were consulted and why (transparent routing).
+
+**Scaling strategy:**
+- 3-10 experts: signal/anti-signal keyword matching from ROSTER.yaml (current).
+- 10-25 experts: embedding similarity over capability descriptors (v1 MCP server).
+- 25-50 experts: category-level routing first, then embedding within category.
+- 50+ experts: hierarchical search with category metadata filters on vector index.
+
+**Expert-to-expert communication** (deferred until more experts exist):
+- All cross-expert communication flows through the orchestrator (no peer-to-peer).
+- When an expert's structured response includes "See also" references or triggers an import, the orchestrator dispatches follow-up queries.
+- Circular dependency prevention via per-query call stack (max depth: 3).
+
+**Workflow chains** (deferred until more experts exist):
+- Declarative YAML pipeline specs in `workflows/` directory.
+- Sequential steps with structured output passing between experts.
+- Orchestrator manages execution and synthesis.
+
 ### v2: Agentic Research + Monitoring
 
 Add autonomous capabilities to the builder and serving layers.
@@ -119,9 +150,10 @@ Add autonomous capabilities to the builder and serving layers.
 - Exported packages do NOT include the Pathfinder framework — just the expert
 
 **Expert-to-expert composition:**
-- Experts can reference other experts for adjacent domains
-- An advisory expert can delegate to a technical reference expert for specific lookups
-- Composition is via MCP tool calls, not monolithic context loading
+- Experts declare imports/exports in MANIFEST.yaml. The orchestrator uses these to detect when cross-expert follow-up is beneficial.
+- All cross-expert communication flows through the orchestrator — no peer-to-peer calls.
+- In Claude Code (v0.5): orchestrator detects "See also" in structured responses and dispatches follow-ups via Agent sub-agents.
+- In MCP server (v1+): the `ask` tool supports multi-expert fan-out natively, and the `synthesize` tool merges responses.
 
 **Orchestrator for expert maintenance:**
 

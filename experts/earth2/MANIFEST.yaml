@@ -1,0 +1,71 @@
+# Earth-2 Expert Manifest
+# Machine-readable capability declaration for orchestrator routing.
+# Human-readable details live in PERSONA.md and ORIENTATION.md.
+
+id: earth2
+name: "Earth-2 Expert"
+version: "1.0"
+archetype: [scientific-domain, tool-platform]
+
+capabilities:
+  - "AI weather prediction models and their architectures"
+  - "NVIDIA Earth-2 platform: Atlas, CorrDiff, StormCast, StormScope, HealDA, FCN3, cBottle"
+  - "PhysicsNeMo framework and Earth2Studio Python library"
+  - "Weather model comparison, benchmarks, and verification metrics"
+  - "Atmospheric science fundamentals for machine learning"
+  - "ERA5, GFS, HRRR, GOES data sources and processing pipelines"
+  - "AI weather model inference code and fine-tuning workflows"
+  - "Competing models: GraphCast, GenCast, Pangu-Weather, Aurora, FuXi, AIFS"
+
+produces:
+  - narrative
+  - comparison_table
+  - code_snippet
+  - data_reference
+
+exports:
+  - model_recommendation       # which Earth-2 model for a given task
+  - atmospheric_data_reference  # ERA5, GFS, HRRR data source pointers
+  - model_architecture_summary  # architecture details for any Earth-2 model
+  - benchmark_comparison        # verification metrics across models
+  - inference_code              # Python code for running Earth-2 models
+
+imports:
+  - ocean_state                 # SST, currents from an ocean expert
+  - visualization_command       # WorldScope display instructions
+  - design_guidance             # UI/UX advice from webapp-designer
+
+signals:
+  - Atlas
+  - CorrDiff
+  - FourCastNet
+  - StormCast
+  - StormScope
+  - HealDA
+  - FCN3
+  - cBottle
+  - PhysicsNeMo
+  - Earth2Studio
+  - ERA5
+  - GFS
+  - HRRR
+  - NWP
+  - AI weather
+  - weather model
+  - resolution
+  - inference
+  - ensemble
+  - data assimilation
+  - GraphCast
+  - GenCast
+  - Pangu-Weather
+
+anti_signals:
+  - "show me on globe"
+  - "build an expert"
+  - "calendar"
+  - "email"
+  - "design"
+  - "UI"
+  - "layout"
+  - "CSS"

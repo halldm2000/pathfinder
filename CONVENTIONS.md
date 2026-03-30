@@ -2,7 +2,7 @@
 
 Cross-cutting rules that apply to all experts in this repo. The orchestrator checks compliance during freshness sweeps.
 
-Last updated: 2026-03-29.
+Last updated: 2026-03-30.
 
 ## Session Greeting
 
@@ -121,3 +121,73 @@ Every expert with a SOURCES.md must also have a NEWS.md. This is the user-facing
 - Written by the Orchestrator during freshness checks, or by the expert if it discovers something new during a conversation.
 - Entries older than 3 months may be archived or removed — the underlying reference docs already reflect the change.
 - The Orchestrator reads `experts/*/NEWS.md` to produce cross-expert summaries on demand or at session start.
+
+## MANIFEST.yaml
+
+Every expert must have a `MANIFEST.yaml` — a machine-readable capability declaration used by the orchestrator for routing. This is separate from PERSONA.md (which is human-readable system instructions).
+
+### Format
+
+```yaml
+id: {expert-id}              # directory name, kebab-case
+name: "{Display Name}"
+version: "1.0"
+archetype: [{primary}, {secondary}]  # from the archetype list in Pathfinder ORIENTATION.md
+
+capabilities:                 # 3-8 compact descriptors (future: embedding targets)
+  - "One-line description of what this expert knows or can do"
+
+produces:                     # structured output types
+  - narrative                 # prose answer
+  - comparison_table          # structured comparison
+  - code_snippet              # working code
+  - data_reference            # pointer to data source
+  # add domain-specific types as needed
+
+exports:                      # what this expert can provide to other experts
+  - {capability_name}         # short descriptor
+
+imports:                      # what this expert might need from other experts
+  - {capability_name}         # matches an export from another expert
+
+signals: [keyword1, keyword2]       # trigger routing to this expert
+anti_signals: ["phrase1", "phrase2"] # route away from this expert
+```
+
+### Rules
+
+- The MANIFEST.yaml is the source of truth for routing. The orchestrator reads `experts/ROSTER.yaml` (consolidated from manifests) rather than scanning PERSONA.md files.
+- Pathfinder produces a MANIFEST.yaml as part of every expert build (Step 6b, after evaluation).
+- When an expert's scope changes, update its MANIFEST.yaml and regenerate ROSTER.yaml.
+- Capabilities should be specific enough to distinguish this expert from adjacent ones but general enough for embedding-based matching at scale.
+
+## Structured Expert Response Format
+
+When the orchestrator invokes an expert during fan-out (multi-expert consultation), the expert returns a structured response. This format enables the orchestrator to merge multiple expert perspectives.
+
+This format is used ONLY when the orchestrator consults an expert programmatically. When a user talks to an expert directly, the expert responds naturally per its PERSONA.md.
+
+### Format
+
+```markdown
+## Expert Response: {expert_id}
+**Confidence:** high | medium | low
+**Scope match:** full | partial | tangential
+**Key claims:**
+- Claim 1 (source: orientation doc, as of YYYY-MM)
+- Claim 2 (source: reference/{file}.md)
+- Claim 3 (source: web search, verified YYYY-MM-DD)
+**Answer:**
+[Prose answer to the question]
+**Gaps:**
+[What this expert cannot address about the query]
+**See also:** [expert_ids that might have additional perspective]
+```
+
+### Fields
+
+- **Confidence:** How well this question falls within the expert's domain. High = core expertise, medium = adjacent, low = tangential.
+- **Scope match:** Full = question is squarely in-scope, partial = partially in-scope, tangential = mostly outside scope but has something relevant to contribute.
+- **Key claims:** The most important facts in the answer, with source attribution. This lets the synthesizer check for agreement/disagreement across experts.
+- **Gaps:** Honest about what the expert doesn't know. This tells the orchestrator whether to consult additional experts.
+- **See also:** Pointers to other experts that might add value. The orchestrator uses these to decide whether to extend the fan-out.

@@ -15,10 +15,11 @@ On session start, display this verbatim:
 
 ## Routing Rules
 
-1. **Classify the question** using signals and anti-signals from ORIENTATION.md
-2. **State your interpretation before acting** when ambiguous: "I think this is a visualization question — routing to Worldscope. If you meant the science, let me know."
-3. **No match? Ask, don't guess.** "I'm not sure which expert handles this. Could you clarify whether you're asking about [X] or [Y]?"
-4. **Never guess from your own training.** Always consult the expert's docs before answering domain questions. Your job is to relay expert knowledge, not generate your own.
+1. **Read `experts/ROSTER.yaml`** for the expert capability index — capabilities, signals, and anti-signals for every expert.
+2. **Classify the question** by matching against roster signals and capabilities.
+3. **State your interpretation before acting** when ambiguous: "I think this is a visualization question — routing to Worldscope. If you meant the science, let me know."
+4. **No match? Ask, don't guess.** "I'm not sure which expert handles this. Could you clarify whether you're asking about [X] or [Y]?"
+5. **Never guess from your own training.** Always consult the expert's docs before answering domain questions. Your job is to relay expert knowledge, not generate your own.
 
 ## Invocation Modes
 
@@ -28,10 +29,35 @@ On session start, display this verbatim:
 
 **Compose** (multi-tool workflows): Chain multiple experts and tools for multi-step tasks.
 
+**Fan-out** (cross-domain questions): When a query clearly benefits from multiple expert perspectives, consult 2-5 experts in parallel and synthesize their responses into a unified answer.
+
+### Fan-Out Protocol
+
+Use fan-out when:
+- The query explicitly references concepts from multiple expert domains
+- The question is cross-cutting (e.g., "How would I visualize CorrDiff output?" = earth2 + worldscope)
+- The user asks for a comparison or integration across domains
+
+Do NOT fan out for:
+- Straightforward single-domain questions
+- Quick fact lookups
+- Tool operations (calendar, email, etc.)
+
+**How to execute fan-out:**
+1. Read `experts/ROSTER.yaml` and identify 2-5 relevant experts by signal/capability match.
+2. Spawn parallel Agent sub-agents. Each sub-agent reads one expert's PERSONA.md and ORIENTATION.md (and reference docs if needed), then answers the scoped sub-question using the structured response format (see CONVENTIONS.md).
+3. Collect the structured responses and synthesize:
+   - Group claims by agreement/disagreement
+   - Resolve conflicts by source date (newer wins)
+   - Note gaps each expert identified
+   - Follow up on "See also" references if they point to an unconsulted expert
+4. Present a unified answer with per-expert attribution: "I consulted [experts] because [reasoning]."
+
 ## Experts (in `experts/`)
 
-Scan `experts/*/PERSONA.md` to discover available experts and their domains. Currently:
+Read `experts/ROSTER.yaml` for the full expert index. Each expert also has a `MANIFEST.yaml` with detailed capabilities, imports/exports, and signals. Currently:
 - **pathfinder** — Builds and improves AI domain experts
+- **webapp-designer** — Frontend design, scientific viz, beautiful UIs, browser QA
 - **earth2** — NVIDIA Earth-2, AI weather/climate models, atmospheric science
 
 ## Key Tools (MCP servers)

@@ -68,6 +68,7 @@ Run the six-probe evaluation suite (defined in ORIENTATION.md) against the exper
 3. **reference/** — Deep-dive docs on key entities, read on demand (when the domain warrants depth)
 4. **SOURCES.md** — Ingestion and monitoring sources (if needed)
 5. **RETRIEVAL.md** — Retrieval strategy with three-tier hierarchy (if needed)
+6. **MANIFEST.yaml** — Machine-readable capability declaration for orchestrator routing (always). See CONVENTIONS.md for format. After creating, regenerate `experts/ROSTER.yaml`.
 
 ## Failure Modes
 
