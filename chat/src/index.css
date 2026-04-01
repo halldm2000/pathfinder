@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #3f3f46 transparent;
+}
+
+.markdown-content pre {
+  @apply bg-zinc-900 rounded p-3 overflow-x-auto text-sm my-2;
+}
+
+.markdown-content code {
+  @apply bg-zinc-800 rounded px-1.5 py-0.5 text-sm;
+}
+
+.markdown-content pre code {
+  @apply bg-transparent p-0;
+}
+
+.markdown-content p {
+  @apply my-1.5;
+}
+
+.markdown-content ul, .markdown-content ol {
+  @apply ml-4 my-1.5;
+}
+
+.markdown-content li {
+  @apply my-0.5;
+}
+
+.markdown-content table {
+  @apply border-collapse w-full my-2 text-sm;
+}
+
+.markdown-content th, .markdown-content td {
+  @apply border border-zinc-700 px-2 py-1;
+}
+
+.markdown-content th {
+  @apply bg-zinc-800 font-semibold;
+}
